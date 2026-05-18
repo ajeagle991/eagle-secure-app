@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>EAGLE 🦅 | AMAR DHABA OO QASAB AH</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', monospace;
+        }
+
+        body {
+            background: radial-gradient(circle at 20% 30%, #0a0f1e, #03060c);
+            min-height: 100vh;
+            color: #e0eaff;
+            overflow-x: hidden;
+        }
+
+        /* PREMIUM GLASSMORPHIC DASHBOARD */
+        .dashboard {
+            display: flex;
+            padding: 20px;
+            gap: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* LEFT SIDEBAR - Military Dark */
+        .sidebar {
+            width: 280px;
+            background: rgba(10, 20, 30, 0.65);
+            backdrop-filter: blur(14px);
+            border-radius: 28px;
+            border: 1px solid rgba(0, 255, 255, 0.25);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+            padding: 24px 16px;
+            height: fit-content;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+            margin-bottom: 30px;
+        }
+
+        .logo-area h2 {
+            font-size: 1.7rem;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #aaffff, #2a8f8f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .sidebar nav ul {
+            list-style: none;
+        }
+
+        .sidebar nav ul li {
+            margin: 20px 0;
+            padding: 12px 18px;
+            border-radius: 16px;
+            transition: 0.2s;
+            cursor: pointer;
+            font-weight: 500;
+            backdrop-filter: blur(4px);
+        }
+
+        .sidebar nav ul li:hover {
+            background: rgba(0, 255, 255, 0.15);
+            border-left: 3px solid #0ff;
+            transform: translateX(6px);
+        }
+
+        /* CENTRAL CONSOLE */
+        .central-console {
+            flex: 2;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            padding: 24px;
+        }
+
+        .terminal-header {
+            font-size: 1.5rem;
+            border-left: 4px solid #0ff;
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+
+        .transmit-area {
+            background: rgba(0, 20, 30, 0.7);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .glow-input {
+            width: 100%;
+            background: #07121c;
+            border: 1px solid #0ff;
+            padding: 14px;
+            border-radius: 20px;
+            color: #0ff;
+            font-size: 1rem;
+            margin: 12px 0;
+            outline: none;
+        }
+
+        .glow-input:focus {
+            box-shadow: 0 0 12px cyan;
+        }
+
+        textarea {
+            width: 100%;
+            background: #07121c;
+            border: 1px solid #0ff;
+            padding: 14px;
+            border-radius: 20px;
+            color: white;
+            margin: 12px 0;
+            resize: vertical;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #0ff, #0088aa);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: #000;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1rem;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 15px cyan;
+        }
+
+        .signal-receiver {
+            background: #0a111f;
+            border-radius: 24px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid cyan;
+        }
+
+        /* RIGHT RADAR MAP */
+        .radar-panel {
+            width: 340px;
+            background: rgba(5, 15, 20, 0.75);
+            backdrop-filter: blur(16px);
+            border-radius: 28px;
+            border: 1px solid #0ff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .neon-radar {
+            background: #001520;
+            height: 260px;
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            margin: 15px 0;
+            box-shadow: inset 0 0 40px rgba(0,255,255,0.2);
+        }
+
+        .radar-sweep {
+            width: 100%;
+            height: 100%;
+            background: conic-gradient(from 0deg, transparent, rgba(0,255,255,0.3), transparent);
+            animation: sweep 3s linear infinite;
+        }
+
+        @keyframes sweep {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* bottom metrics */
+        .metrics {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            gap: 12px;
+        }
+        .metric-card {
+            background: #0a0f1cd9;
+            border-radius: 20px;
+            padding: 12px;
+            text-align: center;
+            flex: 1;
+            border: 1px solid cyan;
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            top:0;left:0;
+            width: 100%;height:100%;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        .modal-card {
+            background: #0c1422;
+            border: 2px solid cyan;
+            border-radius: 48px;
+            padding: 48px;
+            text-align: center;
+            width: 500px;
+            box-shadow: 0 0 60px cyan;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .countdown-badge {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff5555;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div id="registrationModal" class="modal-overlay">
+    <div class="modal-card">
+        <h2 style="color:cyan;">🦅 FADLAN GELI AQOONSIGAAGA</h2>
+        <p style="margin:20px 0">ENTER YOUR CUSTOM NODE ID</p>
+        <input type="text" id="nodeIdInput" class="glow-input" placeholder="e.g., RIDWAAN-723" style="text-align:center;">
+        <button id="registerBtn" class="btn-primary" style="margin-top:20px;">⚡ ACTIVATE NODE ⚡</button>
+    </div>
+</div>
+
+<div class="dashboard" id="mainDashboard" style="display:none;">
+    <!-- LEFT SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo-area">
+            <h2>🦅 EAGLE</h2>
+        </div>
+        <nav>
+            <ul>
+                <li data-key="sidebar_qalabka">📡 Qalabka Amar</li>
+                <li data-key="sidebar_warbixin">📜 Warbixin Qarsoon</li>
+                <li data-key="sidebar_hanunka">⚠️ Hanunka Khatarta</li>
+                <li data-key="sidebar_qalabka_dejinta">⚙️ Qalabka & Dejinta</li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- CENTRAL CONSOLE -->
+    <div class="central-console">
+        <div class="terminal-header" data-key="console_title">Fariimo Ammaan ah / Secure Messages</div>
+        
+        <div class="transmit-area">
+            <div data-key="transmit_label">Aqoonsiga Qaataha (Target Node ID):</div>
+            <input type="text" id="targetId" class="glow-input" placeholder="e.g., COMMANDER-007">
+            
+            <div data-key="message_label">Qoraalka Fariinta:</div>
+            <textarea rows="3" id="messageText" placeholder="Type your encrypted operational message..."></textarea>
+            
+            <button id="sendBtn" class="btn-primary">🚀 Qarso & Kala Dir</button>
+        </div>
+
+        <div class="signal-receiver" id="receiverPanel">
+            <div data-key="receiver_title">📡 Signal Receiver Hub</div>
+            <div id="incomingDataArea" style="margin-top:15px; color:#0ff;">Awaiting fragments...</div>
+            <div id="countdownTimer" class="countdown-badge"></div>
+        </div>
+    </div>
+
+    <!-- RIGHT RADAR PANEL -->
+    <div class="radar-panel">
+        <div data-key="radar_title">Khariidadda Sirdoonka Khatarta</div>
+        <div class="neon-radar"><div class="radar-sweep"></div></div>
+        <div data-key="radar_status">🔴 ACTIVE SURVEILLANCE</div>
+    </div>
+</div>
+
+<div class="metrics" id="metricsBar" style="display:none; max-width:1600px; margin:20px auto; padding:0 20px;">
+    <div class="metric-card"><span data-key="metric_cpu">CPU</span><br> <span id="cpuVal">0%</span></div>
+    <div class="metric-card"><span data-key="metric_latency">Latency</span><br> <span id="latencyVal">0ms</span></div>
+    <div class="metric-card"><span data-key="metric_network">Network Speed</span><br> <span id="netVal">0 Mbps</span></div>
+</div>
+
+<script>
+    // ---------- GLOBAL STATE ----------
+    let MY_ID = null;
+    let activeCountdownInterval = null;
+    let currentFragmentData = null;
+    let countdownSeconds = 0;
+    const BACKEND_URL = "https://eagle-military-backend.onrender.com";  // REPLACE WITH YOUR RENDER URL
+
+    // Translations dictionary
+    const translations = {
+        so: {
+            sidebar_qalabka: "📡 Qalabka Amar", sidebar_warbixin: "📜 Warbixin Qarsoon", sidebar_hanunka: "⚠️ Hanunka Khatarta", sidebar_qalabka_dejinta: "⚙️ Qalabka & Dejinta",
+            console_title: "Fariimo Ammaan ah", transmit_label: "Aqoonsiga Qaataha (Target Node ID):", message_label: "Qoraalka Fariinta:", receiver_title: "📡 Qalabka Helista calaamadaha",
+            radar_title: "Khariidadda Sirdoonka Khatarta", radar_status: "🔴 DAAWO FIRFIRCOON", metric_cpu: "CPU", metric_latency: "Daahitaan", metric_network: "Xawaare Shabakad"
+        },
+        en: {
+            sidebar_qalabka: "📡 Command Tools", sidebar_warbixin: "📜 Classified Report", sidebar_hanunka: "⚠️ Threat Handler", sidebar_qalabka_dejinta: "⚙️ Tools & Settings",
+            console_title: "Secure Messages", transmit_label: "Target Node ID:", message_label: "Message Text:", receiver_title: "📡 Signal Receiver Hub",
+            radar_title: "Intel Threat Map", radar_status: "🔴 ACTIVE SURVEILLANCE", metric_cpu: "CPU", metric_latency: "Latency", metric_network: "Network Speed"
+        },
+        it: {
+            sidebar_qalabka: "📡 Strumenti Comando", sidebar_warbixin: "📜 Rapporto Riservato", sidebar_hanunka: "⚠️ Gestore Minacce", sidebar_qalabka_dejinta: "⚙️ Strumenti & Impost.",
+            console_title: "Messaggi Sicuri", transmit_label: "ID Destinatario:", message_label: "Testo Messaggio:", receiver_title: "📡 Hub Ricevitore Segnali",
+            radar_title: "Mappa Intel Minacce", radar_status: "🔴 SORVEGLIANZA ATTIVA", metric_cpu: "CPU", metric_latency: "Latenza", metric_network: "Velocità Rete"
+        }
+    };
+
+    function applyLanguage(lang) {
+        document.querySelectorAll('[data-key]').forEach(el => {
+            const key = el.getAttribute('data-key');
+            if(translations[lang] && translations[lang][key]) {
+                if(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.placeholder = translations[lang][key];
+                } else {
+                    el.innerText = translations[lang][key];
+                }
+            }
+        });
+    }
+
+    // Language selector injection
+    const langSelector = document.createElement('div');
+    langSelector.style.position = 'fixed';
+    langSelector.style.top = '20px';
+    langSelector.style.right = '30px';
+    langSelector.style.zIndex = '999';
+    langSelector.style.background = '#0a0f1ecc';
+    langSelector.style.padding = '8px 14px';
+    langSelector.style.borderRadius = '30px';
+    langSelector.style.backdropFilter = 'blur(8px)';
+    langSelector.style.border = '1px solid cyan';
+    langSelector.innerHTML = `
+        <select id="languageSwitcher" style="background:transparent; color:cyan; border:none; font-weight:bold;">
+            <option value="so">🇸🇴 Somali</option>
+            <option value="en">🇬🇧 English</option>
+            <option value="it">🇮🇹 Italian</option>
+        </select>
+    `;
+    document.body.appendChild(langSelector);
+    document.getElementById('languageSwitcher')?.addEventListener('change', (e) => applyLanguage(e.target.value));
+
+    // Register Node
+    document.getElementById('registerBtn')?.addEventListener('click', () => {
+        const idInput = document.getElementById('nodeIdInput').value.trim();
+        if(!idInput) return alert("Enter a valid Custom Node ID!");
+        MY_ID = idInput;
+        localStorage.setItem('eagle_node_id', MY_ID);
+        document.getElementById('registrationModal').classList.add('hidden');
+        document.getElementById('mainDashboard').style.display = 'flex';
+        document.getElementById('metricsBar').style.display = 'flex';
+        startPolling();
+        simulateMetrics();
+    });
+
+    async function sendMessage() {
+        if(!MY_ID) return;
+        const target = document.getElementById('targetId').value.trim();
+        const msg = document.getElementById('messageText').value;
+        if(!target || !msg) return alert("Target ID and message required.");
+        try {
+            await fetch(`${BACKEND_URL}/api/send`, {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({ sender: MY_ID, receiver: target, text: msg })
+            });
+            document.getElementById('messageText').value = '';
+        } catch(e){ console.error(e); }
+    }
+
+    // Polling GET
+    async function pollMessages() {
+        if(!MY_ID) return;
+        try {
+            const res = await fetch(`${BACKEND_URL}/api/receive/${MY_ID}`);
+            const data = await res.json();
+            if(data && data.fragment) {
+                if(currentFragmentData !== data.fragment) {
+                    currentFragmentData = data.fragment;
+                    triggerHexGridAnimation(data.fragment);
+                }
+            }
+        } catch(err) { /* silent */ }
+    }
+
+    function triggerHexGridAnimation(fragmentText) {
+        const receiverDiv = document.getElementById('incomingDataArea');
+        receiverDiv.innerHTML = `<div style="display:grid; grid-template-columns:repeat(10,1fr); gap:4px;">${Array(100).fill(0).map(() => `<div style="background:#0f0f2a; border:1px solid cyan; height:12px; width:100%; animation: pulseHex 0.2s infinite alternate;"></div>`).join('')}</div>`;
+        const style = document.createElement('style');
+        style.textContent = `@keyframes pulseHex { from { opacity:0.2; background:#0ff; } to { opacity:1; background:#f0f; } }`;
+        document.head.appendChild(style);
+        
+        // countdown 10 seconds
+        if(activeCountdownInterval) clearInterval(activeCountdownInterval);
+        countdownSeconds = 10;
+        const timerDiv = document.getElementById('countdownTimer');
+        activeCountdownInterval = setInterval(() => {
+            countdownSeconds--;
+            timerDiv.innerText = `💣 DESTROY IN: ${countdownSeconds}s`;
+            if(countdownSeconds <= 0) {
+                clearInterval(activeCountdownInterval);
+                // FLASH WIPE ANIMATION & DESTROY DATA
+                receiverDiv.style.animation = 'flashWipe 0.5s ease-out';
+                setTimeout(() => {
+                    receiverDiv.innerHTML = '<span style="color:#0ff;">⚠️ DATA DESTROYED - SECURE PURGE ⚠️</span>';
+                    timerDiv.innerText = '';
+                    currentFragmentData = null;
+                    receiverDiv.style.animation = '';
+                }, 500);
+            }
+        }, 1000);
+    }
+
+    function startPolling() { setInterval(pollMessages, 2000); }
+    function simulateMetrics() {
+        setInterval(() => {
+            document.getElementById('cpuVal').innerText = Math.floor(20 + Math.random() * 35) + '%';
+            document.getElementById('latencyVal').innerText = Math.floor(40 + Math.random() * 90) + 'ms';
+            document.getElementById('netVal').innerText = (50 + Math.random() * 150).toFixed(0) + ' Mbps';
+        }, 3000);
+    }
+
+    document.getElementById('sendBtn')?.addEventListener('click', sendMessage);
+    // auto language default
+    applyLanguage('so');
+    
+    // Additional flash animation keyframe
+    const flashStyle = document.createElement('style');
+    flashStyle.textContent = `@keyframes flashWipe { 0% { opacity:1; background:white; } 100% { opacity:0; background:black; } }`;
+    document.head.appendChild(flashStyle);
+</script>
+</body>
+</html>
