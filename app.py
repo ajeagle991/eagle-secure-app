@@ -113,7 +113,8 @@ def send_message():
     sender_id = data.get("sender_id")
     target_id = data.get("target_id")
     message = data.get("message")
-    attachment = data.get("attachment", None)  # Base64 attachment
+    attachment = data.get("attachment", None)
+    audio_attachment = data.get("audio_attachment", None)
     
     if not sender_id or not target_id or not message:
         return jsonify({"error": "Missing required fields"}), 400
@@ -136,6 +137,12 @@ def send_message():
     
     if attachment:
         message_obj["attachment"] = attachment
+        message_obj["attachment_name"] = data.get("attachment_name")
+        message_obj["attachment_type"] = data.get("attachment_type")
+    
+    if audio_attachment:
+        message_obj["audio_attachment"] = audio_attachment
+        message_obj["audio_duration"] = data.get("audio_duration", 0)
     
     message_buffer[target_id].append(message_obj)
     

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>EAGLE SECURE APP | Classified Communication Terminal</title>
     <style>
         * {
@@ -19,6 +19,7 @@
             padding: 20px;
         }
 
+        /* ==================== DESKTOP LAYOUT (DEFAULT) ==================== */
         .dashboard {
             max-width: 1600px;
             margin: 0 auto;
@@ -37,6 +38,7 @@
             transition: all 0.2s ease;
         }
 
+        /* ==================== LEFT SIDEBAR ==================== */
         .sidebar {
             padding: 24px 16px;
             display: flex;
@@ -124,6 +126,7 @@
             color: #fa0;
         }
 
+        /* ==================== CENTER CONSOLE ==================== */
         .console {
             padding: 24px;
             display: flex;
@@ -155,7 +158,15 @@
             letter-spacing: 1px;
         }
 
-        .glow-input, .glow-textarea {
+        .message-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .glow-textarea {
+            flex: 1;
             background: rgba(0, 0, 0, 0.6);
             border: 1px solid rgba(0, 255, 255, 0.5);
             border-radius: 16px;
@@ -165,6 +176,77 @@
             outline: none;
             transition: 0.2s;
             resize: none;
+        }
+
+        .mic-btn {
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid #0ff;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mic-btn:hover {
+            background: #0ff;
+            color: #000;
+            box-shadow: 0 0 15px #0ff;
+        }
+
+        .mic-btn.recording {
+            background: #f00;
+            border-color: #f00;
+            animation: pulseRed 1s infinite;
+        }
+
+        @keyframes pulseRed {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
+        }
+
+        .audio-visualizer {
+            position: absolute;
+            bottom: -30px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: rgba(0, 255, 255, 0.3);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .audio-visualizer .progress {
+            height: 100%;
+            width: 0%;
+            background: #0ff;
+            transition: width 0.1s linear;
+        }
+
+        .recording-timer {
+            position: absolute;
+            right: 60px;
+            top: -25px;
+            font-size: 11px;
+            color: #f44;
+            background: rgba(0,0,0,0.7);
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        .glow-input {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            border-radius: 16px;
+            padding: 14px 18px;
+            color: #0ff;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s;
         }
 
         .glow-input:focus, .glow-textarea:focus {
@@ -246,25 +328,26 @@
             color: #ff8888;
         }
 
-        .download-attachment-btn {
+        .download-attachment-btn, .play-audio-btn {
             background: rgba(0, 255, 255, 0.2);
             border: 1px solid #0ff;
             border-radius: 20px;
             padding: 5px 12px;
             margin-top: 8px;
+            margin-right: 8px;
             cursor: pointer;
             font-size: 11px;
             color: #0ff;
             transition: 0.2s;
         }
 
-        .download-attachment-btn:hover {
+        .download-attachment-btn:hover, .play-audio-btn:hover {
             background: #0ff;
             color: #000;
         }
 
-        /* Right Sidebar - File Cloaker */
-        .radar-panel {
+        /* ==================== RIGHT SIDEBAR ==================== */
+        .right-sidebar {
             padding: 20px;
             display: flex;
             flex-direction: column;
@@ -337,7 +420,77 @@
             letter-spacing: 2px;
         }
 
-        /* File Cloaker Zone */
+        /* Secure Local Vault */
+        .secure-vault {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            padding: 12px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+
+        .vault-title {
+            font-size: 11px;
+            color: #0ff;
+            text-align: center;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        .vault-add {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .vault-add input {
+            flex: 1;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid rgba(0,255,255,0.3);
+            border-radius: 12px;
+            padding: 8px;
+            color: #0ff;
+            font-size: 11px;
+        }
+
+        .vault-add button {
+            background: rgba(0,255,255,0.2);
+            border: 1px solid #0ff;
+            border-radius: 12px;
+            padding: 8px 12px;
+            cursor: pointer;
+            color: #0ff;
+        }
+
+        .vault-items {
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .vault-item {
+            background: rgba(0,255,255,0.05);
+            border-radius: 10px;
+            padding: 8px;
+            margin-bottom: 6px;
+            font-size: 10px;
+        }
+
+        .vault-item-buttons {
+            margin-top: 6px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .vault-item-buttons button {
+            background: rgba(0,255,255,0.15);
+            border: none;
+            border-radius: 8px;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 9px;
+            color: #0ff;
+        }
+
+        /* File Cloaker */
         .file-cloaker {
             margin-top: auto;
             background: rgba(0, 0, 0, 0.5);
@@ -410,6 +563,7 @@
             text-align: center;
         }
 
+        /* Bottom Metrics Bar */
         .metrics-bar {
             grid-column: 1 / -1;
             display: grid;
@@ -433,6 +587,7 @@
             color: #0ff;
         }
 
+        /* Login Modal */
         .modal {
             position: fixed;
             top: 0;
@@ -489,6 +644,7 @@
             margin-top: 10px;
         }
 
+        /* Fragment Animation */
         .fragment-overlay {
             position: fixed;
             top: 0;
@@ -520,10 +676,127 @@
                 transform: translate(var(--tx, 200px), var(--ty, -100px)) rotate(360deg);
             }
         }
+
+        /* ==================== MOBILE RESPONSIVE (COLLAPSIBLE DRAWER) ==================== */
+        @media (max-width: 968px) {
+            body {
+                padding: 10px;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .sidebar, .right-sidebar, .console {
+                min-height: auto;
+            }
+            
+            /* Mobile Drawer Toggle */
+            .mobile-drawer-toggle {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: #0ff;
+                color: #000;
+                border: none;
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+                cursor: pointer;
+                z-index: 100;
+                box-shadow: 0 0 20px #0ff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .mobile-drawer {
+                position: fixed;
+                top: 0;
+                left: -280px;
+                width: 280px;
+                height: 100%;
+                background: rgba(10, 20, 30, 0.98);
+                backdrop-filter: blur(20px);
+                border-right: 1px solid #0ff;
+                z-index: 200;
+                transition: left 0.3s ease;
+                padding: 20px;
+                overflow-y: auto;
+            }
+            
+            .mobile-drawer.open {
+                left: 0;
+            }
+            
+            .mobile-drawer-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.7);
+                z-index: 199;
+                display: none;
+            }
+            
+            .mobile-drawer-overlay.open {
+                display: block;
+            }
+            
+            .mobile-close {
+                position: absolute;
+                top: 10px;
+                right: 15px;
+                font-size: 24px;
+                color: #0ff;
+                cursor: pointer;
+            }
+            
+            /* Hide original sidebars on mobile */
+            .sidebar {
+                display: none;
+            }
+            
+            .right-sidebar {
+                display: none;
+            }
+            
+            /* Make console full width */
+            .console {
+                width: 100%;
+            }
+            
+            .metrics-bar {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+            
+            .metric-value {
+                font-size: 20px;
+            }
+            
+            .message-input-wrapper {
+                flex-direction: column;
+            }
+            
+            .mic-btn {
+                align-self: flex-end;
+            }
+        }
+        
+        @media (min-width: 969px) {
+            .mobile-drawer-toggle, .mobile-drawer, .mobile-drawer-overlay {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
 
+<!-- Login Modal -->
 <div id="loginModal" class="modal">
     <div class="modal-content">
         <h2 style="color:#0ff">⚡ EAGLE SECURE ⚡</h2>
@@ -539,8 +812,48 @@
     </div>
 </div>
 
+<!-- Mobile Drawer Elements -->
+<button class="mobile-drawer-toggle" id="mobileDrawerToggle">☰</button>
+<div class="mobile-drawer-overlay" id="mobileDrawerOverlay"></div>
+<div class="mobile-drawer" id="mobileDrawer">
+    <div class="mobile-close" id="mobileClose">✕</div>
+    <div class="logo-area">
+        <h1>◈ EAGLE SECURE ◈</h1>
+        <div class="badge" id="mobileNodeBadge">NODE: ---</div>
+    </div>
+    <div class="nav-menu" style="margin-bottom: 20px;">
+        <div class="nav-item">📡 COMMAND TOOLS</div>
+        <div class="nav-item">📄 CLASSIFIED REPORT</div>
+        <div class="nav-item">⚠️ THREAT HANDLER</div>
+        <div class="nav-item" id="mobileToolsBtn">⚙️ TOOLS & SETTINGS</div>
+    </div>
+    <div class="cyber-map-container" style="margin-bottom: 20px;">
+        <div class="cyber-map-title">🌐 LIVE CYBER ATTACK MAP</div>
+        <canvas id="mobileCyberCanvas" width="240" height="160"></canvas>
+        <div class="alert-status" id="mobileAlertStatus">🟢 SECURE: NO ACTIVE THREATS</div>
+    </div>
+    <div class="secure-vault">
+        <div class="vault-title">🔐 SECURE LOCAL VAULT (AES Encrypted)</div>
+        <div class="vault-add">
+            <input type="text" id="mobileVaultLabel" placeholder="Label/title">
+            <textarea id="mobileVaultContent" rows="2" placeholder="Secret data..." style="width:100%; background:rgba(0,0,0,0.6); color:#0ff; border:1px solid #0ff; border-radius:8px; padding:6px;"></textarea>
+            <button id="mobileVaultSaveBtn">Save</button>
+        </div>
+        <div id="mobileVaultItems" class="vault-items"></div>
+    </div>
+    <div class="file-cloaker" style="margin-top: 20px;">
+        <div class="cloaker-title">🔒 SECURE FILE / IMAGE CLOAKER</div>
+        <div class="drop-zone" id="mobileDropZone">
+            <div class="file-icon">📁</div>
+            <p>DROP FILE HERE</p>
+        </div>
+        <div id="mobileFileInfo" class="attachment-preview" style="display: none;"></div>
+    </div>
+</div>
+
+<!-- Main Dashboard -->
 <div id="mainApp" class="dashboard hidden">
-    <!-- LEFT SIDEBAR with Cyber Attack Map -->
+    <!-- LEFT SIDEBAR -->
     <div class="sidebar glass-panel">
         <div class="logo-area">
             <h1>◈ EAGLE SECURE ◈</h1>
@@ -553,7 +866,6 @@
             <div class="nav-item" id="toolsSettingsBtn">⚙️ TOOLS & SETTINGS</div>
         </div>
         
-        <!-- Live Cyber Attack Map / Matrix Stream -->
         <div class="cyber-map-container">
             <div class="cyber-map-title">🌐 LIVE CYBER ATTACK MAP</div>
             <canvas id="cyberCanvas" width="248" height="180"></canvas>
@@ -572,9 +884,17 @@
         </div>
         <div class="input-group">
             <label id="messageLabel">📝 ENCRYPTED MESSAGE STRING</label>
-            <textarea id="messageText" rows="4" class="glow-textarea" placeholder="Type classified message..."></textarea>
+            <div class="message-input-wrapper">
+                <textarea id="messageText" rows="4" class="glow-textarea" placeholder="Type classified message..."></textarea>
+                <button id="micBtn" class="mic-btn" title="Record Secure Audio (Max 60s)">🎤</button>
+                <div class="recording-timer" id="recordingTimer" style="display: none;">0:00</div>
+                <div class="audio-visualizer" id="audioVisualizer" style="display: none;">
+                    <div class="progress" id="audioProgress"></div>
+                </div>
+            </div>
         </div>
         <div id="attachmentPreview" class="attachment-preview hidden"></div>
+        <div id="audioPreview" class="attachment-preview hidden" style="color:#0fa;"></div>
         <button id="sendBtn" class="send-btn">⚡ QARSO & KALA DIR ⚡</button>
         <div>
             <label style="color:#8cf">📬 INBOX (EPHEMERAL)</label>
@@ -584,8 +904,8 @@
         </div>
     </div>
 
-    <!-- RIGHT SIDEBAR with Eagle Scan + File Cloaker -->
-    <div class="radar-panel glass-panel">
+    <!-- RIGHT SIDEBAR -->
+    <div class="right-sidebar glass-panel">
         <div class="radar-title">🛰️ ACTIVE SURVEILLANCE</div>
         <div class="radar-graphic">
             <div class="radar-scan-line"></div>
@@ -596,7 +916,18 @@
         </div>
         <div class="threat-text" id="threatMsg">🔴 4 active signals | ECCM active</div>
         
-        <!-- Secure File/Image Cloaker -->
+        <!-- Secure Local Storage Vault -->
+        <div class="secure-vault">
+            <div class="vault-title">🔐 SECURE LOCAL VAULT (AES Encrypted)</div>
+            <div class="vault-add">
+                <input type="text" id="vaultLabel" placeholder="Label/title" style="flex:1;">
+                <button id="vaultSaveBtn">Save</button>
+            </div>
+            <textarea id="vaultContent" rows="2" placeholder="Secret text or paste Base64 image/data..." style="width:100%; background:rgba(0,0,0,0.6); color:#0ff; border:1px solid #0ff; border-radius:8px; padding:6px; margin-bottom:8px;"></textarea>
+            <div id="vaultItems" class="vault-items"></div>
+        </div>
+        
+        <!-- Secure File Cloaker -->
         <div class="file-cloaker" id="fileCloaker">
             <div class="cloaker-title">🔒 SECURE FILE / IMAGE CLOAKER</div>
             <div class="drop-zone" id="dropZone">
@@ -629,8 +960,211 @@
     let currentAttachmentBase64 = null;
     let currentAttachmentName = null;
     let currentAttachmentType = null;
+    let currentAudioBase64 = null;
+    let currentAudioDuration = 0;
+    
+    // Audio recording variables
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let isRecording = false;
+    let recordingStartTime = null;
+    let recordingInterval = null;
 
-    // ==================== MULTI-LANGUAGE DICTIONARY ====================
+    // ==================== AES ENCRYPTION FOR VAULT ====================
+    // Simple but secure AES-like encryption using Web Crypto API
+    async function encryptData(text, password = "eagle-secure-key-2024") {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(text);
+        const keyMaterial = await crypto.subtle.importKey(
+            "raw",
+            encoder.encode(password.padEnd(32, "0").slice(0, 32)),
+            { name: "PBKDF2" },
+            false,
+            ["deriveKey"]
+        );
+        const salt = crypto.getRandomValues(new Uint8Array(16));
+        const key = await crypto.subtle.deriveKey(
+            {
+                name: "PBKDF2",
+                salt: salt,
+                iterations: 100000,
+                hash: "SHA-256"
+            },
+            keyMaterial,
+            { name: "AES-GCM", length: 256 },
+            false,
+            ["encrypt"]
+        );
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+        const encrypted = await crypto.subtle.encrypt(
+            { name: "AES-GCM", iv: iv },
+            key,
+            data
+        );
+        const combined = new Uint8Array(salt.length + iv.length + encrypted.byteLength);
+        combined.set(salt, 0);
+        combined.set(iv, salt.length);
+        combined.set(new Uint8Array(encrypted), salt.length + iv.length);
+        return btoa(String.fromCharCode.apply(null, combined));
+    }
+    
+    async function decryptData(encryptedBase64, password = "eagle-secure-key-2024") {
+        const combined = Uint8Array.from(atob(encryptedBase64), c => c.charCodeAt(0));
+        const salt = combined.slice(0, 16);
+        const iv = combined.slice(16, 28);
+        const encrypted = combined.slice(28);
+        const encoder = new TextEncoder();
+        const keyMaterial = await crypto.subtle.importKey(
+            "raw",
+            encoder.encode(password.padEnd(32, "0").slice(0, 32)),
+            { name: "PBKDF2" },
+            false,
+            ["deriveKey"]
+        );
+        const key = await crypto.subtle.deriveKey(
+            {
+                name: "PBKDF2",
+                salt: salt,
+                iterations: 100000,
+                hash: "SHA-256"
+            },
+            keyMaterial,
+            { name: "AES-GCM", length: 256 },
+            false,
+            ["decrypt"]
+        );
+        const decrypted = await crypto.subtle.decrypt(
+            { name: "AES-GCM", iv: iv },
+            key,
+            encrypted
+        );
+        return new TextDecoder().decode(decrypted);
+    }
+
+    // ==================== VAULT FUNCTIONS ====================
+    async function saveToVault(label, content) {
+        if (!label || !content) return;
+        const encrypted = await encryptData(content);
+        const vault = JSON.parse(localStorage.getItem("eagle_secure_vault") || "[]");
+        vault.push({ id: Date.now(), label, encrypted, timestamp: new Date().toISOString() });
+        localStorage.setItem("eagle_secure_vault", JSON.stringify(vault));
+        renderVault();
+    }
+    
+    async function renderVault() {
+        const vaultContainer = document.getElementById("vaultItems");
+        const mobileVaultContainer = document.getElementById("mobileVaultItems");
+        const vault = JSON.parse(localStorage.getItem("eagle_secure_vault") || "[]");
+        
+        const renderItems = (container) => {
+            if (!container) return;
+            container.innerHTML = "";
+            for (let item of vault.reverse().slice(0, 10)) {
+                const div = document.createElement("div");
+                div.className = "vault-item";
+                div.innerHTML = `
+                    <strong>📌 ${escapeHtml(item.label)}</strong><br>
+                    <small>${new Date(item.timestamp).toLocaleString()}</small>
+                    <div class="vault-item-buttons">
+                        <button class="vault-decrypt" data-id="${item.id}">🔓 Decrypt & View</button>
+                        <button class="vault-wipe" data-id="${item.id}">🗑️ Wipe</button>
+                    </div>
+                    <div class="vault-decrypted-content" style="display:none; margin-top:6px; word-break:break-all;"></div>
+                `;
+                container.appendChild(div);
+            }
+            
+            container.querySelectorAll(".vault-decrypt").forEach(btn => {
+                btn.addEventListener("click", async (e) => {
+                    const id = parseInt(btn.getAttribute("data-id"));
+                    const item = vault.find(i => i.id === id);
+                    if (item) {
+                        const decrypted = await decryptData(item.encrypted);
+                        const contentDiv = btn.closest(".vault-item").querySelector(".vault-decrypted-content");
+                        contentDiv.style.display = "block";
+                        contentDiv.innerHTML = `<span style="color:#0fa;">📄 ${escapeHtml(decrypted)}</span>`;
+                    }
+                });
+            });
+            
+            container.querySelectorAll(".vault-wipe").forEach(btn => {
+                btn.addEventListener("click", async (e) => {
+                    const id = parseInt(btn.getAttribute("data-id"));
+                    let vaultData = JSON.parse(localStorage.getItem("eagle_secure_vault") || "[]");
+                    vaultData = vaultData.filter(i => i.id !== id);
+                    localStorage.setItem("eagle_secure_vault", JSON.stringify(vaultData));
+                    renderVault();
+                });
+            });
+        };
+        
+        renderItems(vaultContainer);
+        renderItems(mobileVaultContainer);
+    }
+    
+    // ==================== AUDIO RECORDING ====================
+    async function startRecording() {
+        if (isRecording) return;
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            audioChunks = [];
+            
+            mediaRecorder.ondataavailable = (event) => {
+                audioChunks.push(event.data);
+            };
+            
+            mediaRecorder.onstop = async () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    currentAudioBase64 = reader.result;
+                    currentAudioDuration = Math.floor((Date.now() - recordingStartTime) / 1000);
+                    document.getElementById("audioPreview").style.display = "block";
+                    document.getElementById("audioPreview").innerHTML = `🎤 Secure Audio captured (${currentAudioDuration}s) - Will self-destruct after 15min`;
+                    document.getElementById("micBtn").classList.remove("recording");
+                };
+                reader.readAsDataURL(audioBlob);
+                stream.getTracks().forEach(track => track.stop());
+            };
+            
+            mediaRecorder.start();
+            isRecording = true;
+            recordingStartTime = Date.now();
+            document.getElementById("micBtn").classList.add("recording");
+            document.getElementById("recordingTimer").style.display = "block";
+            document.getElementById("audioVisualizer").style.display = "block";
+            
+            recordingInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
+                const remaining = 60 - elapsed;
+                document.getElementById("recordingTimer").textContent = `${Math.floor(remaining / 60)}:${(remaining % 60).toString().padStart(2, '0')}`;
+                const progressPercent = (elapsed / 60) * 100;
+                document.getElementById("audioProgress").style.width = `${progressPercent}%`;
+                
+                if (elapsed >= 60) {
+                    stopRecording();
+                }
+            }, 100);
+        } catch (err) {
+            console.error("Microphone error:", err);
+            alert("Microphone access denied or not available");
+        }
+    }
+    
+    function stopRecording() {
+        if (mediaRecorder && isRecording) {
+            mediaRecorder.stop();
+            isRecording = false;
+            clearInterval(recordingInterval);
+            document.getElementById("recordingTimer").style.display = "none";
+            document.getElementById("audioVisualizer").style.display = "none";
+            document.getElementById("recordingTimer").textContent = "0:00";
+            document.getElementById("audioProgress").style.width = "0%";
+        }
+    }
+
+    // ==================== MULTI-LANGUAGE ====================
     const translations = {
         en: {
             loginPrompt: "ENTER YOUR NODE ID",
@@ -646,7 +1180,8 @@
             expiresIn: "Expires in",
             messageWiped: "✗ Message wiped (zero footprint)",
             attachment: "📎 Attachment",
-            download: "Download Secure Attachment"
+            download: "Download Secure Attachment",
+            audio: "🎤 Audio Message"
         },
         so: {
             loginPrompt: "GELI AQOONSIGA NODE ID",
@@ -662,7 +1197,8 @@
             expiresIn: "Waqti ka hartay",
             messageWiped: "✗ Farriintii la tirtiray",
             attachment: "📎 Lifaaqa",
-            download: "Soo deji Lifaaqa"
+            download: "Soo deji Lifaaqa",
+            audio: "🎤 Farriinta Codka"
         },
         it: {
             loginPrompt: "INSERISCI IL TUO NODE ID",
@@ -678,7 +1214,8 @@
             expiresIn: "Scade tra",
             messageWiped: "✗ Messaggio cancellato",
             attachment: "📎 Allegato",
-            download: "Scarica Allegato"
+            download: "Scarica Allegato",
+            audio: "🎤 Messaggio Audio"
         }
     };
 
@@ -708,8 +1245,8 @@
     }
 
     // ==================== LIVE CYBER ATTACK MAP ====================
-    function initCyberMap() {
-        const canvas = document.getElementById('cyberCanvas');
+    function initCyberMap(canvasId = "cyberCanvas", alertId = "alertStatus") {
+        const canvas = document.getElementById(canvasId);
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
         const width = canvas.clientWidth;
@@ -720,7 +1257,6 @@
         let nodes = [];
         let threats = [];
         
-        // Create network nodes
         for (let i = 0; i < 25; i++) {
             nodes.push({
                 x: Math.random() * width,
@@ -735,7 +1271,6 @@
             ctx.fillStyle = '#010a12';
             ctx.fillRect(0, 0, width, height);
             
-            // Draw connections
             ctx.beginPath();
             ctx.strokeStyle = 'rgba(0, 255, 255, 0.2)';
             ctx.lineWidth = 1;
@@ -753,7 +1288,6 @@
                 }
             }
             
-            // Draw nodes
             for (let node of nodes) {
                 ctx.beginPath();
                 ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
@@ -763,7 +1297,6 @@
                 ctx.shadowColor = '#0ff';
             }
             
-            // Draw attack lines
             for (let threat of threats) {
                 ctx.beginPath();
                 ctx.moveTo(threat.fromX, threat.fromY);
@@ -772,7 +1305,6 @@
                 ctx.lineWidth = 2;
                 ctx.stroke();
                 
-                // Update positions for animation
                 threat.progress += 0.02;
                 if (threat.progress >= 1) {
                     threat.progress = 0;
@@ -782,17 +1314,17 @@
                     threat.toY = nodes[Math.floor(Math.random() * nodes.length)].y;
                     threat.type = Math.random() > 0.7 ? 'attack' : 'defense';
                     
-                    // Update alert status
-                    const alertDiv = document.getElementById('alertStatus');
-                    if (threat.type === 'attack') {
-                        alertDiv.innerHTML = '🔴 THREAT DETECTED: ACTIVE INTRUSION';
-                        alertDiv.style.color = '#f44';
-                    } else {
-                        alertDiv.innerHTML = '🟢 SECURE: THREAT CONTAINED';
-                        alertDiv.style.color = '#4f4';
+                    const alertDiv = document.getElementById(alertId);
+                    if (alertDiv) {
+                        if (threat.type === 'attack') {
+                            alertDiv.innerHTML = '🔴 THREAT DETECTED: ACTIVE INTRUSION';
+                            alertDiv.style.color = '#f44';
+                        } else {
+                            alertDiv.innerHTML = '🟢 SECURE: THREAT CONTAINED';
+                            alertDiv.style.color = '#4f4';
+                        }
                     }
                     
-                    // Blink affected node
                     const targetNode = nodes.find(n => Math.abs(n.x - threat.toX) < 10 && Math.abs(n.y - threat.toY) < 10);
                     if (targetNode) {
                         targetNode.color = threat.type === 'attack' ? '#f00' : '#0f0';
@@ -804,7 +1336,6 @@
             requestAnimationFrame(draw);
         }
         
-        // Initialize threats
         for (let i = 0; i < 5; i++) {
             threats.push({
                 fromX: nodes[Math.floor(Math.random() * nodes.length)].x,
@@ -818,7 +1349,6 @@
         
         draw();
         
-        // Random node color pulses
         setInterval(() => {
             const randomNode = nodes[Math.floor(Math.random() * nodes.length)];
             randomNode.color = '#fa0';
@@ -826,37 +1356,41 @@
         }, 800);
     }
 
-    // ==================== FILE CLOAKER (Base64 Conversion) ====================
-    function setupFileCloaker() {
-        const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('fileInput');
-        const fileInfo = document.getElementById('fileInfo');
+    // ==================== FILE CLOAKER ====================
+    function setupFileCloaker(dropZoneId = "dropZone", fileInfoId = "fileInfo", fileInputId = "fileInput") {
+        const dropZone = document.getElementById(dropZoneId);
+        const fileInput = document.getElementById(fileInputId);
+        const fileInfo = document.getElementById(fileInfoId);
+        if (!dropZone) return;
         
         dropZone.addEventListener('click', () => fileInput.click());
         
         dropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
-            dropZone.parentElement.classList.add('drag-over');
+            const cloaker = dropZone.closest('.file-cloaker');
+            if (cloaker) cloaker.classList.add('drag-over');
         });
         
         dropZone.addEventListener('dragleave', () => {
-            dropZone.parentElement.classList.remove('drag-over');
+            const cloaker = dropZone.closest('.file-cloaker');
+            if (cloaker) cloaker.classList.remove('drag-over');
         });
         
         dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
-            dropZone.parentElement.classList.remove('drag-over');
+            const cloaker = dropZone.closest('.file-cloaker');
+            if (cloaker) cloaker.classList.remove('drag-over');
             const file = e.dataTransfer.files[0];
-            if (file) processFile(file);
+            if (file) processFile(file, fileInfo);
         });
         
         fileInput.addEventListener('change', (e) => {
-            if (e.target.files[0]) processFile(e.target.files[0]);
+            if (e.target.files[0]) processFile(e.target.files[0], fileInfo);
         });
     }
     
-    function processFile(file) {
-        const maxSize = 5 * 1024 * 1024; // 5MB limit
+    function processFile(file, fileInfoElement) {
+        const maxSize = 5 * 1024 * 1024;
         if (file.size > maxSize) {
             alert('File too large. Maximum 5MB.');
             return;
@@ -868,9 +1402,8 @@
         const reader = new FileReader();
         reader.onload = function(e) {
             currentAttachmentBase64 = e.target.result;
-            const fileInfo = document.getElementById('fileInfo');
-            fileInfo.style.display = 'block';
-            fileInfo.innerHTML = `
+            fileInfoElement.style.display = 'block';
+            fileInfoElement.innerHTML = `
                 📎 ${currentAttachmentName}<br>
                 <span style="font-size: 9px;">${(file.size / 1024).toFixed(1)} KB (Cloaked)</span>
                 <button class="clear-attachment" id="clearAttachmentBtn">Clear</button>
@@ -879,29 +1412,23 @@
                 currentAttachmentBase64 = null;
                 currentAttachmentName = null;
                 currentAttachmentType = null;
-                fileInfo.style.display = 'none';
-                fileInfo.innerHTML = '';
+                fileInfoElement.style.display = 'none';
+                fileInfoElement.innerHTML = '';
             });
         };
         reader.readAsDataURL(file);
     }
 
     // ==================== DATA FRAGMENT ANIMATION ====================
-    function createDataFragments(targetElement) {
+    function createDataFragments() {
         const overlay = document.createElement('div');
         overlay.className = 'fragment-overlay';
         document.body.appendChild(overlay);
         
         const button = document.getElementById('sendBtn');
         const buttonRect = button.getBoundingClientRect();
-        
-        let targetRect;
-        if (targetElement === 'target') {
-            const targetInput = document.getElementById('targetId');
-            targetRect = targetInput.getBoundingClientRect();
-        } else {
-            targetRect = { left: window.innerWidth / 2, top: window.innerHeight / 2 };
-        }
+        const targetInput = document.getElementById('targetId');
+        const targetRect = targetInput.getBoundingClientRect();
         
         const message = document.getElementById('messageText').value;
         const fragments = message.split('').concat(Math.random().toString(36).substring(2, 10).split(''));
@@ -933,23 +1460,32 @@
         }, 1000);
     }
 
-    // ==================== EPHEMERAL MESSAGE WITH COUNTDOWN & ATTACHMENTS ====================
-    function addMessageToHub(senderId, content, timestamp, attachmentBase64 = null, attachmentName = null, attachmentType = null) {
+    // ==================== EPHEMERAL MESSAGE WITH COUNTDOWN ====================
+    function addMessageToHub(senderId, content, timestamp, attachmentBase64 = null, attachmentName = null, attachmentType = null, audioBase64 = null, audioDuration = null) {
         const hub = document.getElementById("msgHub");
         const msgId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
         
         const msgDiv = document.createElement("div");
         msgDiv.id = msgId;
         msgDiv.className = "msg-card";
-        msgDiv.setAttribute('data-sender', senderId);
-        msgDiv.setAttribute('data-content', content);
         
         let attachmentHtml = '';
         if (attachmentBase64) {
             attachmentHtml = `
-                <div class="attachment-container" style="margin-top: 8px;">
+                <div style="margin-top: 8px;">
                     <button class="download-attachment-btn" data-base64="${attachmentBase64}" data-name="${attachmentName || 'file'}" data-type="${attachmentType || 'application/octet-stream'}">
                         📎 ${translations[currentLanguage].download} (${attachmentName || 'file'})
+                    </button>
+                </div>
+            `;
+        }
+        
+        let audioHtml = '';
+        if (audioBase64) {
+            audioHtml = `
+                <div style="margin-top: 8px;">
+                    <button class="play-audio-btn" data-audio="${audioBase64}">
+                        🎤 ${translations[currentLanguage].audio} (${audioDuration || 0}s)
                     </button>
                 </div>
             `;
@@ -964,6 +1500,7 @@
                 <strong>📝 ${translations[currentLanguage].clickToReveal}:</strong><br>
                 <span class="message-content">${escapeHtml(content)}</span>
                 ${attachmentHtml}
+                ${audioHtml}
                 <br><small>🕒 ${new Date(timestamp).toLocaleString()}</small>
             </div>
         `;
@@ -973,7 +1510,7 @@
         let timerInterval = null;
         
         msgDiv.addEventListener('click', (e) => {
-            if (e.target.closest('.full-message') || e.target.classList.contains('download-attachment-btn')) return;
+            if (e.target.closest('.full-message') || e.target.classList.contains('download-attachment-btn') || e.target.classList.contains('play-audio-btn')) return;
             
             if (!revealed) {
                 msgDiv.classList.add('expanded');
@@ -1005,20 +1542,26 @@
             }
         });
         
-        // Attachment download handler
         msgDiv.querySelectorAll('.download-attachment-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const base64Data = btn.getAttribute('data-base64');
                 const fileName = btn.getAttribute('data-name');
-                const fileType = btn.getAttribute('data-type');
-                
                 const link = document.createElement('a');
                 link.href = base64Data;
                 link.download = fileName || 'secure_attachment';
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
+            });
+        });
+        
+        msgDiv.querySelectorAll('.play-audio-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const audioData = btn.getAttribute('data-audio');
+                const audio = new Audio(audioData);
+                audio.play().catch(err => console.warn("Audio play failed:", err));
             });
         });
         
@@ -1052,13 +1595,18 @@
             const result = await apiRequest("/api/authorize", "POST", { node_id: nodeId });
             if (result.authorized) {
                 currentNodeId = nodeId;
-                document.getElementById("activeNodeBadge").innerText = `NODE: ${currentNodeId}`;
+                document.getElementById("activeNodeBadge").innerHTML = `NODE: ${currentNodeId}`;
+                const mobileBadge = document.getElementById("mobileNodeBadge");
+                if (mobileBadge) mobileBadge.innerHTML = `NODE: ${currentNodeId}`;
                 document.getElementById("loginModal").classList.add("hidden");
                 document.getElementById("mainApp").classList.remove("hidden");
                 startPolling();
                 fetchMessages();
-                initCyberMap();
-                setupFileCloaker();
+                initCyberMap("cyberCanvas", "alertStatus");
+                initCyberMap("mobileCyberCanvas", "mobileAlertStatus");
+                setupFileCloaker("dropZone", "fileInfo", "fileInput");
+                setupFileCloaker("mobileDropZone", "mobileFileInfo", "fileInput");
+                renderVault();
                 return true;
             } else {
                 errorDiv.innerText = translations[currentLanguage].authFail;
@@ -1097,9 +1645,14 @@
                 payload.attachment_type = currentAttachmentType;
             }
             
+            if (currentAudioBase64) {
+                payload.audio_attachment = currentAudioBase64;
+                payload.audio_duration = currentAudioDuration;
+            }
+            
             await apiRequest("/api/send", "POST", payload);
             
-            createDataFragments('target');
+            createDataFragments();
             
             const hub = document.getElementById("msgHub");
             const successMsg = document.createElement("div");
@@ -1114,14 +1667,27 @@
             }, 3000);
             
             document.getElementById("messageText").value = "";
-            
-            // Clear attachment after send
             currentAttachmentBase64 = null;
             currentAttachmentName = null;
             currentAttachmentType = null;
+            currentAudioBase64 = null;
+            currentAudioDuration = 0;
+            
             const fileInfo = document.getElementById('fileInfo');
-            fileInfo.style.display = 'none';
-            fileInfo.innerHTML = '';
+            if (fileInfo) {
+                fileInfo.style.display = 'none';
+                fileInfo.innerHTML = '';
+            }
+            const mobileFileInfo = document.getElementById('mobileFileInfo');
+            if (mobileFileInfo) {
+                mobileFileInfo.style.display = 'none';
+                mobileFileInfo.innerHTML = '';
+            }
+            const audioPreview = document.getElementById('audioPreview');
+            if (audioPreview) {
+                audioPreview.style.display = 'none';
+                audioPreview.innerHTML = '';
+            }
             
         } catch (err) {
             alert(`${translations[currentLanguage].sendFail}: ${err.message}`);
@@ -1141,7 +1707,9 @@
                     msg.timestamp,
                     msg.attachment || null,
                     msg.attachment_name || null,
-                    msg.attachment_type || null
+                    msg.attachment_type || null,
+                    msg.audio_attachment || null,
+                    msg.audio_duration || null
                 );
             }
         } catch (err) {
@@ -1179,6 +1747,29 @@
         alert(`Language changed to ${langOptions[currentLanguage]}`);
     }
 
+    // ==================== MOBILE DRAWER ====================
+    function initMobileDrawer() {
+        const toggle = document.getElementById('mobileDrawerToggle');
+        const drawer = document.getElementById('mobileDrawer');
+        const overlay = document.getElementById('mobileDrawerOverlay');
+        const closeBtn = document.getElementById('mobileClose');
+        
+        if (toggle) {
+            toggle.addEventListener('click', () => {
+                drawer.classList.add('open');
+                overlay.classList.add('open');
+            });
+        }
+        
+        const closeDrawer = () => {
+            drawer.classList.remove('open');
+            overlay.classList.remove('open');
+        };
+        
+        if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+        if (overlay) overlay.addEventListener('click', closeDrawer);
+    }
+
     // ==================== EVENT LISTENERS ====================
     document.getElementById("loginBtn").addEventListener("click", () => {
         const nodeInput = document.getElementById("nodeIdInput").value.trim();
@@ -1191,6 +1782,35 @@
 
     document.getElementById("sendBtn").addEventListener("click", sendMessage);
     document.getElementById("toolsSettingsBtn").addEventListener("click", showLanguageSwitcher);
+    document.getElementById("mobileToolsBtn")?.addEventListener("click", showLanguageSwitcher);
+    
+    document.getElementById("micBtn").addEventListener("click", () => {
+        if (isRecording) {
+            stopRecording();
+        } else {
+            startRecording();
+        }
+    });
+    
+    document.getElementById("vaultSaveBtn").addEventListener("click", async () => {
+        const label = document.getElementById("vaultLabel").value.trim();
+        const content = document.getElementById("vaultContent").value.trim();
+        if (label && content) {
+            await saveToVault(label, content);
+            document.getElementById("vaultLabel").value = "";
+            document.getElementById("vaultContent").value = "";
+        }
+    });
+    
+    document.getElementById("mobileVaultSaveBtn")?.addEventListener("click", async () => {
+        const label = document.getElementById("mobileVaultLabel").value.trim();
+        const content = document.getElementById("mobileVaultContent").value.trim();
+        if (label && content) {
+            await saveToVault(label, content);
+            document.getElementById("mobileVaultLabel").value = "";
+            document.getElementById("mobileVaultContent").value = "";
+        }
+    });
 
     document.querySelectorAll(".lang-btn").forEach(btn => {
         btn.addEventListener("click", (e) => {
@@ -1200,6 +1820,7 @@
     });
 
     updateUITexts();
+    initMobileDrawer();
     
     document.getElementById("nodeIdInput").addEventListener("keypress", (e) => {
         if (e.key === "Enter") document.getElementById("loginBtn").click();
