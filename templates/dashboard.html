@@ -3,452 +3,542 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>EAGLE 🦅 | AMAR DHABA OO QASAB AH</title>
+    <title>EAGLE SECURE APP | Classified Communication Terminal</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', 'Segoe UI', monospace;
+            font-family: 'Segoe UI', 'SF Mono', 'Courier New', monospace;
         }
 
         body {
-            background: radial-gradient(circle at 20% 30%, #0a0f1e, #03060c);
             min-height: 100vh;
-            color: #e0eaff;
+            background: radial-gradient(circle at 20% 30%, #0a0f1e, #03050a);
             overflow-x: hidden;
+            padding: 20px;
         }
 
-        /* PREMIUM GLASSMORPHIC DASHBOARD */
+        /* MAIN DASHBOARD GRID */
         .dashboard {
-            display: flex;
-            padding: 20px;
-            gap: 20px;
             max-width: 1600px;
             margin: 0 auto;
-            position: relative;
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            gap: 18px;
+            backdrop-filter: blur(2px);
         }
 
-        /* LEFT SIDEBAR - Military Dark */
-        .sidebar {
-            width: 280px;
+        /* GLASSMORPHISM BASE */
+        .glass-panel {
             background: rgba(10, 20, 30, 0.65);
             backdrop-filter: blur(14px);
             border-radius: 28px;
             border: 1px solid rgba(0, 255, 255, 0.25);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        /* LEFT SIDEBAR */
+        .sidebar {
             padding: 24px 16px;
-            height: fit-content;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
         }
 
         .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding-bottom: 30px;
+            text-align: center;
             border-bottom: 1px solid rgba(0, 255, 255, 0.3);
-            margin-bottom: 30px;
+            padding-bottom: 20px;
         }
 
-        .logo-area h2 {
-            font-size: 1.7rem;
+        .logo-area h1 {
+            font-size: 22px;
             letter-spacing: 2px;
-            background: linear-gradient(135deg, #aaffff, #2a8f8f);
+            background: linear-gradient(135deg, #0ff, #0a8);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
 
-        .sidebar nav ul {
-            list-style: none;
+        .logo-area .badge {
+            font-size: 11px;
+            color: #0ff;
+            opacity: 0.8;
+            margin-top: 6px;
         }
 
-        .sidebar nav ul li {
-            margin: 20px 0;
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .nav-item {
+            background: rgba(0, 255, 255, 0.05);
             padding: 12px 18px;
             border-radius: 16px;
-            transition: 0.2s;
-            cursor: pointer;
+            color: #ccf;
             font-weight: 500;
-            backdrop-filter: blur(4px);
+            cursor: pointer;
+            transition: 0.2s;
+            border-left: 3px solid #0ff;
+            font-size: 14px;
         }
 
-        .sidebar nav ul li:hover {
-            background: rgba(0, 255, 255, 0.15);
-            border-left: 3px solid #0ff;
+        .nav-item:hover {
+            background: rgba(0, 255, 255, 0.2);
             transform: translateX(6px);
         }
 
-        /* CENTRAL CONSOLE */
-        .central-console {
-            flex: 2;
-            background: rgba(0, 0, 0, 0.55);
-            backdrop-filter: blur(12px);
-            border-radius: 32px;
-            border: 1px solid rgba(0, 255, 255, 0.3);
+        /* CENTER CONSOLE */
+        .console {
             padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
         }
 
-        .terminal-header {
-            font-size: 1.5rem;
-            border-left: 4px solid #0ff;
-            padding-left: 15px;
-            margin-bottom: 20px;
+        .console-header {
+            border-bottom: 1px solid rgba(0, 255, 255, 0.4);
+            padding-bottom: 12px;
         }
 
-        .transmit-area {
-            background: rgba(0, 20, 30, 0.7);
-            border-radius: 24px;
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-
-        .glow-input {
-            width: 100%;
-            background: #07121c;
-            border: 1px solid #0ff;
-            padding: 14px;
-            border-radius: 20px;
+        .console-header h2 {
             color: #0ff;
-            font-size: 1rem;
-            margin: 12px 0;
+            font-size: 20px;
+            letter-spacing: 1px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            color: #8cf;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .glow-input, .glow-textarea {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            border-radius: 16px;
+            padding: 14px 18px;
+            color: #0ff;
+            font-size: 15px;
             outline: none;
+            transition: 0.2s;
+            resize: none;
         }
 
-        .glow-input:focus {
-            box-shadow: 0 0 12px cyan;
+        .glow-input:focus, .glow-textarea:focus {
+            border-color: #0ff;
+            box-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
         }
 
-        textarea {
-            width: 100%;
-            background: #07121c;
+        .send-btn {
+            background: linear-gradient(95deg, #0a2a3a, #001020);
             border: 1px solid #0ff;
-            padding: 14px;
-            border-radius: 20px;
-            color: white;
-            margin: 12px 0;
-            resize: vertical;
-        }
-
-        .btn-primary {
-            background: linear-gradient(90deg, #0ff, #0088aa);
-            border: none;
-            padding: 12px 24px;
             border-radius: 40px;
+            padding: 14px;
             font-weight: bold;
-            color: #000;
+            color: #0ff;
+            font-size: 18px;
             cursor: pointer;
             transition: 0.2s;
-            font-size: 1rem;
+            margin-top: 8px;
         }
 
-        .btn-primary:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 15px cyan;
+        .send-btn:hover {
+            background: #0ff;
+            color: #000;
+            box-shadow: 0 0 20px #0ff;
         }
 
-        .signal-receiver {
-            background: #0a111f;
-            border-radius: 24px;
-            padding: 20px;
-            margin-top: 20px;
-            border: 1px solid cyan;
+        .msg-hub {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            padding: 16px;
+            min-height: 280px;
+            max-height: 340px;
+            overflow-y: auto;
+            border: 1px solid rgba(0, 255, 255, 0.3);
         }
 
-        /* RIGHT RADAR MAP */
+        .msg-card {
+            background: rgba(0, 255, 255, 0.08);
+            border-left: 3px solid #0ff;
+            padding: 10px 14px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            color: #bfe;
+        }
+
+        /* RIGHT RADAR PANEL */
         .radar-panel {
-            width: 340px;
-            background: rgba(5, 15, 20, 0.75);
-            backdrop-filter: blur(16px);
-            border-radius: 28px;
-            border: 1px solid #0ff;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .radar-title {
+            color: #0ff;
+            font-size: 14px;
             text-align: center;
         }
 
-        .neon-radar {
-            background: #001520;
-            height: 260px;
-            border-radius: 24px;
-            position: relative;
-            overflow: hidden;
-            margin: 15px 0;
-            box-shadow: inset 0 0 40px rgba(0,255,255,0.2);
+        .radar-graphic {
+            background: radial-gradient(circle, #0a1a2a, #000);
+            height: 180px;
+            border-radius: 50%;
+            border: 1px solid #0ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
         }
 
-        .radar-sweep {
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 255, 0.3); }
+            70% { box-shadow: 0 0 0 15px rgba(0, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 255, 0); }
+        }
+
+        .threat-text {
+            font-size: 11px;
+            color: #fa0;
+            text-align: center;
+        }
+
+        /* BOTTOM METRICS BAR */
+        .metrics-bar {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-top: 10px;
+        }
+
+        .metric-card {
+            background: rgba(10, 20, 30, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 14px;
+            text-align: center;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #0ff;
+        }
+
+        /* LOGIN MODAL */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            background: conic-gradient(from 0deg, transparent, rgba(0,255,255,0.3), transparent);
-            animation: sweep 3s linear infinite;
-        }
-
-        @keyframes sweep {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* bottom metrics */
-        .metrics {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-            gap: 12px;
-        }
-        .metric-card {
-            background: #0a0f1cd9;
-            border-radius: 20px;
-            padding: 12px;
-            text-align: center;
-            flex: 1;
-            border: 1px solid cyan;
-        }
-
-        /* MODAL */
-        .modal-overlay {
-            position: fixed;
-            top:0;left:0;
-            width: 100%;height:100%;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0, 0, 0, 0.9);
             backdrop-filter: blur(12px);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 9999;
+            z-index: 1000;
         }
-        .modal-card {
-            background: #0c1422;
-            border: 2px solid cyan;
-            border-radius: 48px;
-            padding: 48px;
+
+        .modal-content {
+            background: rgba(10, 20, 30, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid #0ff;
+            border-radius: 32px;
+            padding: 40px;
+            width: 360px;
             text-align: center;
-            width: 500px;
-            box-shadow: 0 0 60px cyan;
+        }
+
+        .lang-switch {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: 1px solid #0ff;
+            color: #0ff;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
         }
 
         .hidden {
             display: none;
         }
-
-        .countdown-badge {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #ff5555;
-            text-align: center;
-        }
     </style>
 </head>
 <body>
 
-<div id="registrationModal" class="modal-overlay">
-    <div class="modal-card">
-        <h2 style="color:cyan;">🦅 FADLAN GELI AQOONSIGAAGA</h2>
-        <p style="margin:20px 0">ENTER YOUR CUSTOM NODE ID</p>
-        <input type="text" id="nodeIdInput" class="glow-input" placeholder="e.g., RIDWAAN-723" style="text-align:center;">
-        <button id="registerBtn" class="btn-primary" style="margin-top:20px;">⚡ ACTIVATE NODE ⚡</button>
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <h2 style="color:#0ff">⚡ EAGLE SECURE ⚡</h2>
+        <p id="loginPrompt" style="color:#ccf; margin:20px 0">ENTER YOUR NODE ID</p>
+        <input type="text" id="nodeIdInput" class="glow-input" placeholder="e.g., 10a23" style="width:100%">
+        <button id="loginBtn" class="send-btn" style="margin-top:20px">AUTHENTICATE</button>
+        <div class="lang-switch">
+            <button class="lang-btn" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="so">SO</button>
+            <button class="lang-btn" data-lang="it">IT</button>
+        </div>
     </div>
 </div>
 
-<div class="dashboard" id="mainDashboard" style="display:none;">
+<div id="mainApp" class="dashboard hidden">
     <!-- LEFT SIDEBAR -->
-    <div class="sidebar">
+    <div class="sidebar glass-panel">
         <div class="logo-area">
-            <h2>🦅 EAGLE</h2>
+            <h1>◈ EAGLE SECURE ◈</h1>
+            <div class="badge" id="activeNodeBadge">NODE: ---</div>
         </div>
-        <nav>
-            <ul>
-                <li data-key="sidebar_qalabka">📡 Qalabka Amar</li>
-                <li data-key="sidebar_warbixin">📜 Warbixin Qarsoon</li>
-                <li data-key="sidebar_hanunka">⚠️ Hanunka Khatarta</li>
-                <li data-key="sidebar_qalabka_dejinta">⚙️ Qalabka & Dejinta</li>
-            </ul>
-        </nav>
+        <div class="nav-menu">
+            <div class="nav-item">📡 COMMAND TOOLS</div>
+            <div class="nav-item">📄 CLASSIFIED REPORT</div>
+            <div class="nav-item">⚠️ THREAT HANDLER</div>
+            <div class="nav-item">⚙️ TOOLS & SETTINGS</div>
+        </div>
     </div>
 
-    <!-- CENTRAL CONSOLE -->
-    <div class="central-console">
-        <div class="terminal-header" data-key="console_title">Fariimo Ammaan ah / Secure Messages</div>
-        
-        <div class="transmit-area">
-            <div data-key="transmit_label">Aqoonsiga Qaataha (Target Node ID):</div>
-            <input type="text" id="targetId" class="glow-input" placeholder="e.g., COMMANDER-007">
-            
-            <div data-key="message_label">Qoraalka Fariinta:</div>
-            <textarea rows="3" id="messageText" placeholder="Type your encrypted operational message..."></textarea>
-            
-            <button id="sendBtn" class="btn-primary">🚀 Qarso & Kala Dir</button>
+    <!-- CENTER CONSOLE -->
+    <div class="console glass-panel">
+        <div class="console-header">
+            <h2>🔐 SECURE MESSAGES TERMINAL</h2>
         </div>
-
-        <div class="signal-receiver" id="receiverPanel">
-            <div data-key="receiver_title">📡 Signal Receiver Hub</div>
-            <div id="incomingDataArea" style="margin-top:15px; color:#0ff;">Awaiting fragments...</div>
-            <div id="countdownTimer" class="countdown-badge"></div>
+        <div class="input-group">
+            <label id="targetLabel">🎯 TARGET NODE ID</label>
+            <input type="text" id="targetId" class="glow-input" placeholder="e.g., 04f78">
+        </div>
+        <div class="input-group">
+            <label id="messageLabel">📝 ENCRYPTED MESSAGE STRING</label>
+            <textarea id="messageText" rows="4" class="glow-textarea" placeholder="Type classified message..."></textarea>
+        </div>
+        <button id="sendBtn" class="send-btn">⚡ QARSO & KALA DIR ⚡</button>
+        <div>
+            <label style="color:#8cf">📬 INBOX (EPHEMERAL)</label>
+            <div id="msgHub" class="msg-hub">
+                <div class="msg-card">◆ SYSTEM READY ◆</div>
+            </div>
         </div>
     </div>
 
     <!-- RIGHT RADAR PANEL -->
-    <div class="radar-panel">
-        <div data-key="radar_title">Khariidadda Sirdoonka Khatarta</div>
-        <div class="neon-radar"><div class="radar-sweep"></div></div>
-        <div data-key="radar_status">🔴 ACTIVE SURVEILLANCE</div>
+    <div class="radar-panel glass-panel">
+        <div class="radar-title">🛰️ ACTIVE SURVEILLANCE</div>
+        <div class="radar-graphic">
+            <span style="color:#0ff">THREAT SCAN</span>
+        </div>
+        <div class="threat-text" id="threatMsg">🔴 4 active signals | ECCM active</div>
+    </div>
+
+    <!-- BOTTOM METRICS BAR -->
+    <div class="metrics-bar">
+        <div class="metric-card">💻 CPU UTILIZATION<br><span id="cpuMetric" class="metric-value">0%</span></div>
+        <div class="metric-card">🌐 NETWORK LATENCY<br><span id="latencyMetric" class="metric-value">0ms</span></div>
+        <div class="metric-card">📡 NETWORK SPEED<br><span id="speedMetric" class="metric-value">0 Mbps</span></div>
     </div>
 </div>
 
-<div class="metrics" id="metricsBar" style="display:none; max-width:1600px; margin:20px auto; padding:0 20px;">
-    <div class="metric-card"><span data-key="metric_cpu">CPU</span><br> <span id="cpuVal">0%</span></div>
-    <div class="metric-card"><span data-key="metric_latency">Latency</span><br> <span id="latencyVal">0ms</span></div>
-    <div class="metric-card"><span data-key="metric_network">Network Speed</span><br> <span id="netVal">0 Mbps</span></div>
-</div>
-
 <script>
-    // ---------- GLOBAL STATE ----------
-    let MY_ID = null;
-    let activeCountdownInterval = null;
-    let currentFragmentData = null;
-    let countdownSeconds = 0;
-    const BACKEND_URL = "https://eagle-military-backend.onrender.com";  // REPLACE WITH YOUR RENDER URL
+    // ==================== CONFIGURATION ====================
+    const SERVER_URL = window.location.origin;  // For Render deployment, or replace with your backend URL
+    const API_KEY = "default-super-secret-key-change-in-production";  // MUST match RENDER_API_KEY env var
 
-    // Translations dictionary
+    let currentLanguage = "en";
+    let currentNodeId = null;
+    let pollingInterval = null;
+
+    // ==================== MULTI-LANGUAGE DICTIONARY ====================
     const translations = {
-        so: {
-            sidebar_qalabka: "📡 Qalabka Amar", sidebar_warbixin: "📜 Warbixin Qarsoon", sidebar_hanunka: "⚠️ Hanunka Khatarta", sidebar_qalabka_dejinta: "⚙️ Qalabka & Dejinta",
-            console_title: "Fariimo Ammaan ah", transmit_label: "Aqoonsiga Qaataha (Target Node ID):", message_label: "Qoraalka Fariinta:", receiver_title: "📡 Qalabka Helista calaamadaha",
-            radar_title: "Khariidadda Sirdoonka Khatarta", radar_status: "🔴 DAAWO FIRFIRCOON", metric_cpu: "CPU", metric_latency: "Daahitaan", metric_network: "Xawaare Shabakad"
-        },
         en: {
-            sidebar_qalabka: "📡 Command Tools", sidebar_warbixin: "📜 Classified Report", sidebar_hanunka: "⚠️ Threat Handler", sidebar_qalabka_dejinta: "⚙️ Tools & Settings",
-            console_title: "Secure Messages", transmit_label: "Target Node ID:", message_label: "Message Text:", receiver_title: "📡 Signal Receiver Hub",
-            radar_title: "Intel Threat Map", radar_status: "🔴 ACTIVE SURVEILLANCE", metric_cpu: "CPU", metric_latency: "Latency", metric_network: "Network Speed"
+            loginPrompt: "ENTER YOUR NODE ID",
+            targetLabel: "🎯 TARGET NODE ID",
+            messageLabel: "📝 ENCRYPTED MESSAGE STRING",
+            sendSuccess: "✓ Message transmitted",
+            sendFail: "✗ Transmission failed",
+            authFail: "❌ Unauthorized Node ID",
+            systemReady: "◆ SYSTEM READY ◆"
+        },
+        so: {
+            loginPrompt: "GELI AQOONSIGA NODE ID",
+            targetLabel: "🎯 BARTILKA NODE ID",
+            messageLabel: "📝 FARIIMTA SIRTA AH",
+            sendSuccess: "✓ Farriinta la direy",
+            sendFail: "✗ Diritaan ku guuldareystay",
+            authFail: "❌ Node ID aan la oggolayn",
+            systemReady: "◆ NIDAAMKA DIIYAAR ◆"
         },
         it: {
-            sidebar_qalabka: "📡 Strumenti Comando", sidebar_warbixin: "📜 Rapporto Riservato", sidebar_hanunka: "⚠️ Gestore Minacce", sidebar_qalabka_dejinta: "⚙️ Strumenti & Impost.",
-            console_title: "Messaggi Sicuri", transmit_label: "ID Destinatario:", message_label: "Testo Messaggio:", receiver_title: "📡 Hub Ricevitore Segnali",
-            radar_title: "Mappa Intel Minacce", radar_status: "🔴 SORVEGLIANZA ATTIVA", metric_cpu: "CPU", metric_latency: "Latenza", metric_network: "Velocità Rete"
+            loginPrompt: "INSERISCI IL TUO NODE ID",
+            targetLabel: "🎯 ID NODE DESTINATARIO",
+            messageLabel: "📝 MESSAGGIO CRITTATO",
+            sendSuccess: "✓ Messaggio trasmesso",
+            sendFail: "✗ Trasmissione fallita",
+            authFail: "❌ Node ID non autorizzato",
+            systemReady: "◆ SISTEMA PRONTO ◆"
         }
     };
 
-    function applyLanguage(lang) {
-        document.querySelectorAll('[data-key]').forEach(el => {
-            const key = el.getAttribute('data-key');
-            if(translations[lang] && translations[lang][key]) {
-                if(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-                    el.placeholder = translations[lang][key];
-                } else {
-                    el.innerText = translations[lang][key];
-                }
-            }
-        });
+    function updateUITexts() {
+        if (!currentLanguage) return;
+        document.getElementById("loginPrompt").innerText = translations[currentLanguage].loginPrompt;
+        document.getElementById("targetLabel").innerText = translations[currentLanguage].targetLabel;
+        document.getElementById("messageLabel").innerText = translations[currentLanguage].messageLabel;
     }
 
-    // Language selector injection
-    const langSelector = document.createElement('div');
-    langSelector.style.position = 'fixed';
-    langSelector.style.top = '20px';
-    langSelector.style.right = '30px';
-    langSelector.style.zIndex = '999';
-    langSelector.style.background = '#0a0f1ecc';
-    langSelector.style.padding = '8px 14px';
-    langSelector.style.borderRadius = '30px';
-    langSelector.style.backdropFilter = 'blur(8px)';
-    langSelector.style.border = '1px solid cyan';
-    langSelector.innerHTML = `
-        <select id="languageSwitcher" style="background:transparent; color:cyan; border:none; font-weight:bold;">
-            <option value="so">🇸🇴 Somali</option>
-            <option value="en">🇬🇧 English</option>
-            <option value="it">🇮🇹 Italian</option>
-        </select>
-    `;
-    document.body.appendChild(langSelector);
-    document.getElementById('languageSwitcher')?.addEventListener('change', (e) => applyLanguage(e.target.value));
+    // ==================== HELPER: API REQUEST WITH AUTH ====================
+    async function apiRequest(endpoint, method, body = null) {
+        const headers = {
+            "X-API-Key": API_KEY,
+            "Content-Type": "application/json"
+        };
+        const options = { method, headers };
+        if (body) options.body = JSON.stringify(body);
+        
+        const response = await fetch(`${SERVER_URL}${endpoint}`, options);
+        if (!response.ok) {
+            const err = await response.json().catch(() => ({}));
+            throw new Error(err.error || `HTTP ${response.status}`);
+        }
+        return response.json();
+    }
 
-    // Register Node
-    document.getElementById('registerBtn')?.addEventListener('click', () => {
-        const idInput = document.getElementById('nodeIdInput').value.trim();
-        if(!idInput) return alert("Enter a valid Custom Node ID!");
-        MY_ID = idInput;
-        localStorage.setItem('eagle_node_id', MY_ID);
-        document.getElementById('registrationModal').classList.add('hidden');
-        document.getElementById('mainDashboard').style.display = 'flex';
-        document.getElementById('metricsBar').style.display = 'flex';
-        startPolling();
-        simulateMetrics();
+    // ==================== LOGIN AUTH ====================
+    async function authenticateNode(nodeId) {
+        try {
+            const result = await apiRequest("/api/authorize", "POST", { node_id: nodeId });
+            if (result.authorized) {
+                currentNodeId = nodeId;
+                document.getElementById("activeNodeBadge").innerText = `NODE: ${currentNodeId}`;
+                document.getElementById("loginModal").classList.add("hidden");
+                document.getElementById("mainApp").classList.remove("hidden");
+                startPolling();
+                fetchMessages(); // immediate fetch
+                return true;
+            } else {
+                alert(translations[currentLanguage].authFail);
+                return false;
+            }
+        } catch (err) {
+            alert(`${translations[currentLanguage].authFail}: ${err.message}`);
+            return false;
+        }
+    }
+
+    // ==================== SEND MESSAGE ====================
+    async function sendMessage() {
+        if (!currentNodeId) {
+            alert("Session expired. Relogin required.");
+            return;
+        }
+        const targetId = document.getElementById("targetId").value.trim();
+        const messageText = document.getElementById("messageText").value.trim();
+        
+        if (!targetId || !messageText) {
+            alert("Target Node ID and Message cannot be empty.");
+            return;
+        }
+        
+        try {
+            await apiRequest("/api/send", "POST", {
+                sender_id: currentNodeId,
+                target_id: targetId,
+                message: messageText
+            });
+            const hub = document.getElementById("msgHub");
+            const successMsg = document.createElement("div");
+            successMsg.className = "msg-card";
+            successMsg.style.borderLeftColor = "#0f0";
+            successMsg.innerText = `✅ ${translations[currentLanguage].sendSuccess} → ${targetId}`;
+            hub.prepend(successMsg);
+            document.getElementById("messageText").value = "";
+        } catch (err) {
+            alert(`${translations[currentLanguage].sendFail}: ${err.message}`);
+        }
+    }
+
+    // ==================== FETCH & EPHEMERAL RETRIEVAL ====================
+    async function fetchMessages() {
+        if (!currentNodeId) return;
+        try {
+            const data = await apiRequest(`/api/receive/${currentNodeId}`, "GET");
+            const messages = data.messages || [];
+            const hub = document.getElementById("msgHub");
+            if (messages.length > 0) {
+                for (let msg of messages) {
+                    const msgDiv = document.createElement("div");
+                    msgDiv.className = "msg-card";
+                    msgDiv.innerHTML = `<strong>📨 FROM: ${msg.from}</strong><br>📝 ${msg.content}<br><small>🕒 ${msg.timestamp}</small>`;
+                    hub.prepend(msgDiv);
+                }
+            }
+        } catch (err) {
+            console.warn("Polling error:", err);
+        }
+    }
+
+    function startPolling() {
+        if (pollingInterval) clearInterval(pollingInterval);
+        pollingInterval = setInterval(() => {
+            fetchMessages();
+            updateMetrics();
+        }, 2000);
+    }
+
+    // ==================== LIVE METRICS SIMULATION ====================
+    function updateMetrics() {
+        const cpu = Math.floor(Math.random() * 40) + 15;
+        const latency = Math.floor(Math.random() * 80) + 12;
+        const speed = (Math.random() * 90 + 45).toFixed(1);
+        document.getElementById("cpuMetric").innerText = `${cpu}%`;
+        document.getElementById("latencyMetric").innerText = `${latency}ms`;
+        document.getElementById("speedMetric").innerText = `${speed} Mbps`;
+        const threats = ["🔍 SCANNING", "⚠️ LOW THREAT", "🛡️ ACTIVE DEFENSE", "📡 SIGNAL MASKED"];
+        document.getElementById("threatMsg").innerHTML = `🛰️ ${threats[Math.floor(Math.random()*threats.length)]}`;
+    }
+
+    // ==================== EVENT LISTENERS ====================
+    document.getElementById("loginBtn").addEventListener("click", () => {
+        const nodeInput = document.getElementById("nodeIdInput").value.trim();
+        if (!nodeInput) return;
+        authenticateNode(nodeInput);
     });
 
-    async function sendMessage() {
-        if(!MY_ID) return;
-        const target = document.getElementById('targetId').value.trim();
-        const msg = document.getElementById('messageText').value;
-        if(!target || !msg) return alert("Target ID and message required.");
-        try {
-            await fetch(`${BACKEND_URL}/api/send`, {
-                method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({ sender: MY_ID, receiver: target, text: msg })
-            });
-            document.getElementById('messageText').value = '';
-        } catch(e){ console.error(e); }
-    }
+    document.getElementById("sendBtn").addEventListener("click", sendMessage);
 
-    // Polling GET
-    async function pollMessages() {
-        if(!MY_ID) return;
-        try {
-            const res = await fetch(`${BACKEND_URL}/api/receive/${MY_ID}`);
-            const data = await res.json();
-            if(data && data.fragment) {
-                if(currentFragmentData !== data.fragment) {
-                    currentFragmentData = data.fragment;
-                    triggerHexGridAnimation(data.fragment);
-                }
-            }
-        } catch(err) { /* silent */ }
-    }
+    // Language switching
+    document.querySelectorAll(".lang-btn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            currentLanguage = e.target.getAttribute("data-lang");
+            updateUITexts();
+        });
+    });
 
-    function triggerHexGridAnimation(fragmentText) {
-        const receiverDiv = document.getElementById('incomingDataArea');
-        receiverDiv.innerHTML = `<div style="display:grid; grid-template-columns:repeat(10,1fr); gap:4px;">${Array(100).fill(0).map(() => `<div style="background:#0f0f2a; border:1px solid cyan; height:12px; width:100%; animation: pulseHex 0.2s infinite alternate;"></div>`).join('')}</div>`;
-        const style = document.createElement('style');
-        style.textContent = `@keyframes pulseHex { from { opacity:0.2; background:#0ff; } to { opacity:1; background:#f0f; } }`;
-        document.head.appendChild(style);
-        
-        // countdown 10 seconds
-        if(activeCountdownInterval) clearInterval(activeCountdownInterval);
-        countdownSeconds = 10;
-        const timerDiv = document.getElementById('countdownTimer');
-        activeCountdownInterval = setInterval(() => {
-            countdownSeconds--;
-            timerDiv.innerText = `💣 DESTROY IN: ${countdownSeconds}s`;
-            if(countdownSeconds <= 0) {
-                clearInterval(activeCountdownInterval);
-                // FLASH WIPE ANIMATION & DESTROY DATA
-                receiverDiv.style.animation = 'flashWipe 0.5s ease-out';
-                setTimeout(() => {
-                    receiverDiv.innerHTML = '<span style="color:#0ff;">⚠️ DATA DESTROYED - SECURE PURGE ⚠️</span>';
-                    timerDiv.innerText = '';
-                    currentFragmentData = null;
-                    receiverDiv.style.animation = '';
-                }, 500);
-            }
-        }, 1000);
-    }
-
-    function startPolling() { setInterval(pollMessages, 2000); }
-    function simulateMetrics() {
-        setInterval(() => {
-            document.getElementById('cpuVal').innerText = Math.floor(20 + Math.random() * 35) + '%';
-            document.getElementById('latencyVal').innerText = Math.floor(40 + Math.random() * 90) + 'ms';
-            document.getElementById('netVal').innerText = (50 + Math.random() * 150).toFixed(0) + ' Mbps';
-        }, 3000);
-    }
-
-    document.getElementById('sendBtn')?.addEventListener('click', sendMessage);
-    // auto language default
-    applyLanguage('so');
+    // Initial language set
+    updateUITexts();
     
-    // Additional flash animation keyframe
-    const flashStyle = document.createElement('style');
-    flashStyle.textContent = `@keyframes flashWipe { 0% { opacity:1; background:white; } 100% { opacity:0; background:black; } }`;
-    document.head.appendChild(flashStyle);
+    // Allow Enter key on login
+    document.getElementById("nodeIdInput").addEventListener("keypress", (e) => {
+        if (e.key === "Enter") document.getElementById("loginBtn").click();
+    });
 </script>
 </body>
 </html>
