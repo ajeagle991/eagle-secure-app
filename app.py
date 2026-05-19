@@ -113,6 +113,7 @@ def send_message():
     sender_id = data.get("sender_id")
     target_id = data.get("target_id")
     message = data.get("message")
+    attachment = data.get("attachment", None)  # Base64 attachment
     
     if not sender_id or not target_id or not message:
         return jsonify({"error": "Missing required fields"}), 400
@@ -126,12 +127,17 @@ def send_message():
     if target_id not in message_buffer:
         message_buffer[target_id] = []
     
-    message_buffer[target_id].append({
+    message_obj = {
         "from": sender_id,
         "to": target_id,
         "content": message,
         "timestamp": datetime.utcnow().isoformat()
-    })
+    }
+    
+    if attachment:
+        message_obj["attachment"] = attachment
+    
+    message_buffer[target_id].append(message_obj)
     
     return jsonify({"status": "sent", "to": target_id}), 200
 

@@ -42,6 +42,8 @@
             display: flex;
             flex-direction: column;
             gap: 32px;
+            height: 100%;
+            min-height: 85vh;
         }
 
         .logo-area {
@@ -87,6 +89,39 @@
         .nav-item:hover {
             background: rgba(0, 255, 255, 0.2);
             transform: translateX(6px);
+        }
+
+        /* Live Cyber Attack Map */
+        .cyber-map-container {
+            margin-top: auto;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            padding: 12px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+
+        .cyber-map-title {
+            font-size: 10px;
+            color: #0ff;
+            text-align: center;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        #cyberCanvas {
+            width: 100%;
+            height: 180px;
+            background: #010a12;
+            border-radius: 12px;
+            display: block;
+            cursor: pointer;
+        }
+
+        .alert-status {
+            text-align: center;
+            font-size: 9px;
+            margin-top: 8px;
+            color: #fa0;
         }
 
         .console {
@@ -211,11 +246,30 @@
             color: #ff8888;
         }
 
+        .download-attachment-btn {
+            background: rgba(0, 255, 255, 0.2);
+            border: 1px solid #0ff;
+            border-radius: 20px;
+            padding: 5px 12px;
+            margin-top: 8px;
+            cursor: pointer;
+            font-size: 11px;
+            color: #0ff;
+            transition: 0.2s;
+        }
+
+        .download-attachment-btn:hover {
+            background: #0ff;
+            color: #000;
+        }
+
+        /* Right Sidebar - File Cloaker */
         .radar-panel {
             padding: 20px;
             display: flex;
             flex-direction: column;
             gap: 24px;
+            height: 100%;
         }
 
         .radar-title {
@@ -226,7 +280,7 @@
 
         .radar-graphic {
             background: radial-gradient(circle, #0a1a2a, #000);
-            height: 180px;
+            height: 160px;
             border-radius: 50%;
             border: 1px solid #0ff;
             display: flex;
@@ -281,6 +335,73 @@
             font-size: 18px;
             font-weight: bold;
             letter-spacing: 2px;
+        }
+
+        /* File Cloaker Zone */
+        .file-cloaker {
+            margin-top: auto;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            padding: 16px;
+            border: 1px dashed rgba(0, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .file-cloaker.drag-over {
+            border-color: #0ff;
+            background: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .cloaker-title {
+            font-size: 11px;
+            color: #0ff;
+            text-align: center;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        .drop-zone {
+            border: 2px dashed rgba(0, 255, 255, 0.4);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .drop-zone:hover {
+            border-color: #0ff;
+            background: rgba(0, 255, 255, 0.05);
+        }
+
+        .drop-zone p {
+            color: #8cf;
+            font-size: 11px;
+        }
+
+        .drop-zone .file-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .attachment-preview {
+            margin-top: 12px;
+            font-size: 10px;
+            color: #0fa;
+            word-break: break-all;
+            text-align: center;
+        }
+
+        .clear-attachment {
+            background: rgba(255, 0, 0, 0.3);
+            border: none;
+            border-radius: 20px;
+            padding: 4px 12px;
+            margin-top: 8px;
+            cursor: pointer;
+            font-size: 10px;
+            color: #faa;
         }
 
         .threat-text {
@@ -368,7 +489,6 @@
             margin-top: 10px;
         }
 
-        /* Data fragment animation */
         .fragment-overlay {
             position: fixed;
             top: 0;
@@ -420,6 +540,7 @@
 </div>
 
 <div id="mainApp" class="dashboard hidden">
+    <!-- LEFT SIDEBAR with Cyber Attack Map -->
     <div class="sidebar glass-panel">
         <div class="logo-area">
             <h1>◈ EAGLE SECURE ◈</h1>
@@ -431,8 +552,16 @@
             <div class="nav-item">⚠️ THREAT HANDLER</div>
             <div class="nav-item" id="toolsSettingsBtn">⚙️ TOOLS & SETTINGS</div>
         </div>
+        
+        <!-- Live Cyber Attack Map / Matrix Stream -->
+        <div class="cyber-map-container">
+            <div class="cyber-map-title">🌐 LIVE CYBER ATTACK MAP</div>
+            <canvas id="cyberCanvas" width="248" height="180"></canvas>
+            <div class="alert-status" id="alertStatus">🟢 SECURE: NO ACTIVE THREATS</div>
+        </div>
     </div>
 
+    <!-- CENTER CONSOLE -->
     <div class="console glass-panel">
         <div class="console-header">
             <h2>🦅 EAGLE 🦅 MESSAGE GHOST</h2>
@@ -445,6 +574,7 @@
             <label id="messageLabel">📝 ENCRYPTED MESSAGE STRING</label>
             <textarea id="messageText" rows="4" class="glow-textarea" placeholder="Type classified message..."></textarea>
         </div>
+        <div id="attachmentPreview" class="attachment-preview hidden"></div>
         <button id="sendBtn" class="send-btn">⚡ QARSO & KALA DIR ⚡</button>
         <div>
             <label style="color:#8cf">📬 INBOX (EPHEMERAL)</label>
@@ -454,6 +584,7 @@
         </div>
     </div>
 
+    <!-- RIGHT SIDEBAR with Eagle Scan + File Cloaker -->
     <div class="radar-panel glass-panel">
         <div class="radar-title">🛰️ ACTIVE SURVEILLANCE</div>
         <div class="radar-graphic">
@@ -464,8 +595,21 @@
             </div>
         </div>
         <div class="threat-text" id="threatMsg">🔴 4 active signals | ECCM active</div>
+        
+        <!-- Secure File/Image Cloaker -->
+        <div class="file-cloaker" id="fileCloaker">
+            <div class="cloaker-title">🔒 SECURE FILE / IMAGE CLOAKER</div>
+            <div class="drop-zone" id="dropZone">
+                <div class="file-icon">📁</div>
+                <p>DROP CONFIDENTIAL FILE / IMAGE HERE</p>
+                <p style="font-size: 9px; margin-top: 5px;">or click to upload</p>
+            </div>
+            <div id="fileInfo" class="attachment-preview" style="display: none;"></div>
+            <input type="file" id="fileInput" style="display: none;" accept="image/*,application/pdf,.txt,.doc,.docx">
+        </div>
     </div>
 
+    <!-- BOTTOM METRICS BAR -->
     <div class="metrics-bar">
         <div class="metric-card">💻 CPU UTILIZATION<br><span id="cpuMetric" class="metric-value">0%</span></div>
         <div class="metric-card">🌐 NETWORK LATENCY<br><span id="latencyMetric" class="metric-value">0ms</span></div>
@@ -481,7 +625,10 @@
     let currentLanguage = "en";
     let currentNodeId = null;
     let pollingInterval = null;
-    let activeTimers = new Map(); // Track countdown timers by message element ID
+    let activeTimers = new Map();
+    let currentAttachmentBase64 = null;
+    let currentAttachmentName = null;
+    let currentAttachmentType = null;
 
     // ==================== MULTI-LANGUAGE DICTIONARY ====================
     const translations = {
@@ -497,7 +644,9 @@
             from: "FROM",
             clickToReveal: "Click to reveal message",
             expiresIn: "Expires in",
-            messageWiped: "✗ Message wiped (zero footprint)"
+            messageWiped: "✗ Message wiped (zero footprint)",
+            attachment: "📎 Attachment",
+            download: "Download Secure Attachment"
         },
         so: {
             loginPrompt: "GELI AQOONSIGA NODE ID",
@@ -511,7 +660,9 @@
             from: "KAN",
             clickToReveal: "Guji si aad u aragto farriinta",
             expiresIn: "Waqti ka hartay",
-            messageWiped: "✗ Farriintii la tirtiray (eber raad)"
+            messageWiped: "✗ Farriintii la tirtiray",
+            attachment: "📎 Lifaaqa",
+            download: "Soo deji Lifaaqa"
         },
         it: {
             loginPrompt: "INSERISCI IL TUO NODE ID",
@@ -525,7 +676,9 @@
             from: "DA",
             clickToReveal: "Clicca per vedere il messaggio",
             expiresIn: "Scade tra",
-            messageWiped: "✗ Messaggio cancellato (zero tracce)"
+            messageWiped: "✗ Messaggio cancellato",
+            attachment: "📎 Allegato",
+            download: "Scarica Allegato"
         }
     };
 
@@ -552,6 +705,185 @@
             throw new Error(err.error || `HTTP ${response.status}`);
         }
         return response.json();
+    }
+
+    // ==================== LIVE CYBER ATTACK MAP ====================
+    function initCyberMap() {
+        const canvas = document.getElementById('cyberCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
+        canvas.width = width;
+        canvas.height = height;
+        
+        let nodes = [];
+        let threats = [];
+        
+        // Create network nodes
+        for (let i = 0; i < 25; i++) {
+            nodes.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                radius: Math.random() * 4 + 2,
+                color: '#0f0'
+            });
+        }
+        
+        function draw() {
+            if (!ctx) return;
+            ctx.fillStyle = '#010a12';
+            ctx.fillRect(0, 0, width, height);
+            
+            // Draw connections
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(0, 255, 255, 0.2)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const dx = nodes[i].x - nodes[j].x;
+                    const dy = nodes[i].y - nodes[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 60) {
+                        ctx.beginPath();
+                        ctx.moveTo(nodes[i].x, nodes[i].y);
+                        ctx.lineTo(nodes[j].x, nodes[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            
+            // Draw nodes
+            for (let node of nodes) {
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+                ctx.fillStyle = node.color;
+                ctx.fill();
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = '#0ff';
+            }
+            
+            // Draw attack lines
+            for (let threat of threats) {
+                ctx.beginPath();
+                ctx.moveTo(threat.fromX, threat.fromY);
+                ctx.lineTo(threat.toX, threat.toY);
+                ctx.strokeStyle = threat.type === 'attack' ? '#f00' : '#0f0';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // Update positions for animation
+                threat.progress += 0.02;
+                if (threat.progress >= 1) {
+                    threat.progress = 0;
+                    threat.fromX = nodes[Math.floor(Math.random() * nodes.length)].x;
+                    threat.fromY = nodes[Math.floor(Math.random() * nodes.length)].y;
+                    threat.toX = nodes[Math.floor(Math.random() * nodes.length)].x;
+                    threat.toY = nodes[Math.floor(Math.random() * nodes.length)].y;
+                    threat.type = Math.random() > 0.7 ? 'attack' : 'defense';
+                    
+                    // Update alert status
+                    const alertDiv = document.getElementById('alertStatus');
+                    if (threat.type === 'attack') {
+                        alertDiv.innerHTML = '🔴 THREAT DETECTED: ACTIVE INTRUSION';
+                        alertDiv.style.color = '#f44';
+                    } else {
+                        alertDiv.innerHTML = '🟢 SECURE: THREAT CONTAINED';
+                        alertDiv.style.color = '#4f4';
+                    }
+                    
+                    // Blink affected node
+                    const targetNode = nodes.find(n => Math.abs(n.x - threat.toX) < 10 && Math.abs(n.y - threat.toY) < 10);
+                    if (targetNode) {
+                        targetNode.color = threat.type === 'attack' ? '#f00' : '#0f0';
+                        setTimeout(() => { targetNode.color = '#0ff'; }, 500);
+                    }
+                }
+            }
+            
+            requestAnimationFrame(draw);
+        }
+        
+        // Initialize threats
+        for (let i = 0; i < 5; i++) {
+            threats.push({
+                fromX: nodes[Math.floor(Math.random() * nodes.length)].x,
+                fromY: nodes[Math.floor(Math.random() * nodes.length)].y,
+                toX: nodes[Math.floor(Math.random() * nodes.length)].x,
+                toY: nodes[Math.floor(Math.random() * nodes.length)].y,
+                progress: Math.random(),
+                type: Math.random() > 0.7 ? 'attack' : 'defense'
+            });
+        }
+        
+        draw();
+        
+        // Random node color pulses
+        setInterval(() => {
+            const randomNode = nodes[Math.floor(Math.random() * nodes.length)];
+            randomNode.color = '#fa0';
+            setTimeout(() => { randomNode.color = '#0ff'; }, 300);
+        }, 800);
+    }
+
+    // ==================== FILE CLOAKER (Base64 Conversion) ====================
+    function setupFileCloaker() {
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+        
+        dropZone.addEventListener('click', () => fileInput.click());
+        
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.parentElement.classList.add('drag-over');
+        });
+        
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.parentElement.classList.remove('drag-over');
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.parentElement.classList.remove('drag-over');
+            const file = e.dataTransfer.files[0];
+            if (file) processFile(file);
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files[0]) processFile(e.target.files[0]);
+        });
+    }
+    
+    function processFile(file) {
+        const maxSize = 5 * 1024 * 1024; // 5MB limit
+        if (file.size > maxSize) {
+            alert('File too large. Maximum 5MB.');
+            return;
+        }
+        
+        currentAttachmentName = file.name;
+        currentAttachmentType = file.type;
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            currentAttachmentBase64 = e.target.result;
+            const fileInfo = document.getElementById('fileInfo');
+            fileInfo.style.display = 'block';
+            fileInfo.innerHTML = `
+                📎 ${currentAttachmentName}<br>
+                <span style="font-size: 9px;">${(file.size / 1024).toFixed(1)} KB (Cloaked)</span>
+                <button class="clear-attachment" id="clearAttachmentBtn">Clear</button>
+            `;
+            document.getElementById('clearAttachmentBtn')?.addEventListener('click', () => {
+                currentAttachmentBase64 = null;
+                currentAttachmentName = null;
+                currentAttachmentType = null;
+                fileInfo.style.display = 'none';
+                fileInfo.innerHTML = '';
+            });
+        };
+        reader.readAsDataURL(file);
     }
 
     // ==================== DATA FRAGMENT ANIMATION ====================
@@ -601,8 +933,8 @@
         }, 1000);
     }
 
-    // ==================== EPHEMERAL MESSAGE WITH COUNTDOWN ====================
-    function addMessageToHub(senderId, content, timestamp) {
+    // ==================== EPHEMERAL MESSAGE WITH COUNTDOWN & ATTACHMENTS ====================
+    function addMessageToHub(senderId, content, timestamp, attachmentBase64 = null, attachmentName = null, attachmentType = null) {
         const hub = document.getElementById("msgHub");
         const msgId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
         
@@ -612,6 +944,17 @@
         msgDiv.setAttribute('data-sender', senderId);
         msgDiv.setAttribute('data-content', content);
         
+        let attachmentHtml = '';
+        if (attachmentBase64) {
+            attachmentHtml = `
+                <div class="attachment-container" style="margin-top: 8px;">
+                    <button class="download-attachment-btn" data-base64="${attachmentBase64}" data-name="${attachmentName || 'file'}" data-type="${attachmentType || 'application/octet-stream'}">
+                        📎 ${translations[currentLanguage].download} (${attachmentName || 'file'})
+                    </button>
+                </div>
+            `;
+        }
+        
         msgDiv.innerHTML = `
             <div class="sender-only">
                 📨 ${translations[currentLanguage].from}: ${senderId}
@@ -620,68 +963,71 @@
             <div class="full-message">
                 <strong>📝 ${translations[currentLanguage].clickToReveal}:</strong><br>
                 <span class="message-content">${escapeHtml(content)}</span>
+                ${attachmentHtml}
                 <br><small>🕒 ${new Date(timestamp).toLocaleString()}</small>
             </div>
         `;
         
-        // Click to reveal full message and start countdown
         let revealed = false;
-        let timeLeft = 900; // 15 minutes in seconds
+        let timeLeft = 900;
         let timerInterval = null;
         
         msgDiv.addEventListener('click', (e) => {
-            if (e.target.closest('.full-message')) return;
+            if (e.target.closest('.full-message') || e.target.classList.contains('download-attachment-btn')) return;
             
             if (!revealed) {
                 msgDiv.classList.add('expanded');
                 revealed = true;
                 
-                // Start countdown timer
                 const timerSpan = msgDiv.querySelector('.countdown-timer');
                 
                 timerInterval = setInterval(() => {
                     if (timeLeft <= 0) {
-                        // WIPE THE MESSAGE COMPLETELY
                         clearInterval(timerInterval);
-                        if (activeTimers.has(msgId)) {
-                            activeTimers.delete(msgId);
-                        }
-                        // Remove message from DOM
+                        if (activeTimers.has(msgId)) activeTimers.delete(msgId);
                         msgDiv.style.opacity = '0';
                         msgDiv.style.transform = 'translateX(-20px)';
                         setTimeout(() => {
-                            if (msgDiv.parentNode) {
-                                msgDiv.remove();
-                            }
+                            if (msgDiv.parentNode) msgDiv.remove();
                         }, 300);
-                        
-                        // Also wipe from any stored reference (session memory)
-                        console.log(`Message ${msgId} wiped from memory (zero footprint)`);
                     } else {
                         timeLeft--;
                         const minutes = Math.floor(timeLeft / 60);
                         const seconds = timeLeft % 60;
                         timerSpan.textContent = `${translations[currentLanguage].expiresIn}: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                        
                         if (timeLeft <= 60) {
                             timerSpan.style.background = 'rgba(255, 0, 0, 0.6)';
                             timerSpan.style.animation = 'pulse 1s infinite';
                         }
                     }
                 }, 1000);
-                
                 activeTimers.set(msgId, timerInterval);
             }
         });
         
-        // Remove system ready message if present
+        // Attachment download handler
+        msgDiv.querySelectorAll('.download-attachment-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const base64Data = btn.getAttribute('data-base64');
+                const fileName = btn.getAttribute('data-name');
+                const fileType = btn.getAttribute('data-type');
+                
+                const link = document.createElement('a');
+                link.href = base64Data;
+                link.download = fileName || 'secure_attachment';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        });
+        
         if (hub.children.length === 1 && hub.children[0].innerText.includes("SYSTEM READY")) {
             hub.innerHTML = '';
         }
         
         hub.prepend(msgDiv);
         
-        // Limit inbox to 50 messages max
         while (hub.children.length > 50) {
             const oldest = hub.lastChild;
             if (oldest && activeTimers.has(oldest.id)) {
@@ -711,6 +1057,8 @@
                 document.getElementById("mainApp").classList.remove("hidden");
                 startPolling();
                 fetchMessages();
+                initCyberMap();
+                setupFileCloaker();
                 return true;
             } else {
                 errorDiv.innerText = translations[currentLanguage].authFail;
@@ -737,13 +1085,20 @@
         }
         
         try {
-            await apiRequest("/api/send", "POST", {
+            const payload = {
                 sender_id: currentNodeId,
                 target_id: targetId,
                 message: messageText
-            });
+            };
             
-            // Trigger visual fragmentation animation
+            if (currentAttachmentBase64) {
+                payload.attachment = currentAttachmentBase64;
+                payload.attachment_name = currentAttachmentName;
+                payload.attachment_type = currentAttachmentType;
+            }
+            
+            await apiRequest("/api/send", "POST", payload);
+            
             createDataFragments('target');
             
             const hub = document.getElementById("msgHub");
@@ -759,6 +1114,15 @@
             }, 3000);
             
             document.getElementById("messageText").value = "";
+            
+            // Clear attachment after send
+            currentAttachmentBase64 = null;
+            currentAttachmentName = null;
+            currentAttachmentType = null;
+            const fileInfo = document.getElementById('fileInfo');
+            fileInfo.style.display = 'none';
+            fileInfo.innerHTML = '';
+            
         } catch (err) {
             alert(`${translations[currentLanguage].sendFail}: ${err.message}`);
         }
@@ -771,7 +1135,14 @@
             const messages = data.messages || [];
             
             for (let msg of messages) {
-                addMessageToHub(msg.from, msg.content, msg.timestamp);
+                addMessageToHub(
+                    msg.from, 
+                    msg.content, 
+                    msg.timestamp,
+                    msg.attachment || null,
+                    msg.attachment_name || null,
+                    msg.attachment_type || null
+                );
             }
         } catch (err) {
             console.warn("Polling error:", err);
@@ -798,19 +1169,12 @@
         document.getElementById("threatMsg").innerHTML = `🛰️ ${threats[Math.floor(Math.random()*threats.length)]}`;
     }
 
-    // Language switcher from Tools & Settings
     function showLanguageSwitcher() {
-        const langOptions = {
-            en: 'English',
-            so: 'Somali',
-            it: 'Italian'
-        };
-        
+        const langOptions = { en: 'English', so: 'Somali', it: 'Italian' };
         const selected = prompt(`Select language / Dooro luqad / Seleziona lingua:\n1. English\n2. Somali\n3. Italian`, "1");
         if (selected === "1") currentLanguage = "en";
         else if (selected === "2") currentLanguage = "so";
         else if (selected === "3") currentLanguage = "it";
-        
         updateUITexts();
         alert(`Language changed to ${langOptions[currentLanguage]}`);
     }
@@ -826,7 +1190,6 @@
     });
 
     document.getElementById("sendBtn").addEventListener("click", sendMessage);
-    
     document.getElementById("toolsSettingsBtn").addEventListener("click", showLanguageSwitcher);
 
     document.querySelectorAll(".lang-btn").forEach(btn => {
