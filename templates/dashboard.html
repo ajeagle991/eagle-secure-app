@@ -148,6 +148,8 @@
             cursor: pointer;
             transition: 0.2s;
             margin-top: 8px;
+            position: relative;
+            overflow: hidden;
         }
 
         .send-btn:hover {
@@ -174,6 +176,39 @@
             border-radius: 12px;
             font-size: 13px;
             color: #bfe;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .msg-card:hover {
+            background: rgba(0, 255, 255, 0.15);
+            transform: translateX(4px);
+        }
+
+        .msg-card .sender-only {
+            font-weight: bold;
+            color: #0ff;
+        }
+
+        .msg-card .full-message {
+            display: none;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(0, 255, 255, 0.3);
+        }
+
+        .msg-card.expanded .full-message {
+            display: block;
+        }
+
+        .countdown-timer {
+            display: inline-block;
+            background: rgba(255, 0, 0, 0.3);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            margin-left: 10px;
+            color: #ff8888;
         }
 
         .radar-panel {
@@ -195,15 +230,57 @@
             border-radius: 50%;
             border: 1px solid #0ff;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            animation: pulse 2s infinite;
+            position: relative;
+            overflow: hidden;
         }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 255, 255, 0.3); }
-            70% { box-shadow: 0 0 0 15px rgba(0, 255, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 255, 255, 0); }
+        .eagle-scan {
+            text-align: center;
+            z-index: 2;
+        }
+
+        .eagle-scan span {
+            font-size: 48px;
+            display: inline-block;
+            animation: eaglePulse 1.5s ease-in-out infinite, tacticalSweep 3s linear infinite;
+        }
+
+        @keyframes eaglePulse {
+            0%, 100% { transform: scale(1); opacity: 1; text-shadow: 0 0 5px #0ff; }
+            50% { transform: scale(1.15); opacity: 0.9; text-shadow: 0 0 20px #0ff, 0 0 30px #0ff; }
+        }
+
+        @keyframes tacticalSweep {
+            0% { filter: drop-shadow(0 0 5px cyan); }
+            50% { filter: drop-shadow(0 0 20px cyan) drop-shadow(0 0 30px lime); }
+            100% { filter: drop-shadow(0 0 5px cyan); }
+        }
+
+        .radar-scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 40%, rgba(0, 255, 255, 0.15) 50%, transparent 60%);
+            animation: radarRotate 4s linear infinite;
+            border-radius: 50%;
+        }
+
+        @keyframes radarRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .eagle-label {
+            margin-top: 10px;
+            color: #0ff;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 2px;
         }
 
         .threat-text {
@@ -290,6 +367,39 @@
             font-size: 12px;
             margin-top: 10px;
         }
+
+        /* Data fragment animation */
+        .fragment-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .data-fragment {
+            position: absolute;
+            color: #0ff;
+            font-size: 10px;
+            font-family: monospace;
+            white-space: nowrap;
+            animation: flyToTarget 0.8s ease-out forwards;
+            text-shadow: 0 0 5px cyan;
+        }
+
+        @keyframes flyToTarget {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx, 200px), var(--ty, -100px)) rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body>
@@ -319,13 +429,13 @@
             <div class="nav-item">📡 COMMAND TOOLS</div>
             <div class="nav-item">📄 CLASSIFIED REPORT</div>
             <div class="nav-item">⚠️ THREAT HANDLER</div>
-            <div class="nav-item">⚙️ TOOLS & SETTINGS</div>
+            <div class="nav-item" id="toolsSettingsBtn">⚙️ TOOLS & SETTINGS</div>
         </div>
     </div>
 
     <div class="console glass-panel">
         <div class="console-header">
-            <h2>🔐 SECURE MESSAGES TERMINAL</h2>
+            <h2>🦅 EAGLE 🦅 MESSAGE GHOST</h2>
         </div>
         <div class="input-group">
             <label id="targetLabel">🎯 TARGET NODE ID</label>
@@ -347,7 +457,11 @@
     <div class="radar-panel glass-panel">
         <div class="radar-title">🛰️ ACTIVE SURVEILLANCE</div>
         <div class="radar-graphic">
-            <span style="color:#0ff">THREAT SCAN</span>
+            <div class="radar-scan-line"></div>
+            <div class="eagle-scan">
+                <span>🦅</span>
+                <div class="eagle-label">EAGLE</div>
+            </div>
         </div>
         <div class="threat-text" id="threatMsg">🔴 4 active signals | ECCM active</div>
     </div>
@@ -367,6 +481,7 @@
     let currentLanguage = "en";
     let currentNodeId = null;
     let pollingInterval = null;
+    let activeTimers = new Map(); // Track countdown timers by message element ID
 
     // ==================== MULTI-LANGUAGE DICTIONARY ====================
     const translations = {
@@ -378,7 +493,11 @@
             sendFail: "✗ Transmission failed",
             authFail: "Unauthorized Node ID",
             systemReady: "◆ SYSTEM READY ◆",
-            networkError: "Network error. Check connection."
+            networkError: "Network error. Check connection.",
+            from: "FROM",
+            clickToReveal: "Click to reveal message",
+            expiresIn: "Expires in",
+            messageWiped: "✗ Message wiped (zero footprint)"
         },
         so: {
             loginPrompt: "GELI AQOONSIGA NODE ID",
@@ -388,7 +507,11 @@
             sendFail: "✗ Diritaan ku guuldareystay",
             authFail: "Node ID aan la oggolayn",
             systemReady: "◆ NIDAAMKA DIIYAAR ◆",
-            networkError: "Qalad xiriir. Hubi isku xirka."
+            networkError: "Qalad xiriir. Hubi isku xirka.",
+            from: "KAN",
+            clickToReveal: "Guji si aad u aragto farriinta",
+            expiresIn: "Waqti ka hartay",
+            messageWiped: "✗ Farriintii la tirtiray (eber raad)"
         },
         it: {
             loginPrompt: "INSERISCI IL TUO NODE ID",
@@ -398,7 +521,11 @@
             sendFail: "✗ Trasmissione fallita",
             authFail: "Node ID non autorizzato",
             systemReady: "◆ SISTEMA PRONTO ◆",
-            networkError: "Errore di rete. Controlla la connessione."
+            networkError: "Errore di rete. Controlla la connessione.",
+            from: "DA",
+            clickToReveal: "Clicca per vedere il messaggio",
+            expiresIn: "Scade tra",
+            messageWiped: "✗ Messaggio cancellato (zero tracce)"
         }
     };
 
@@ -425,6 +552,150 @@
             throw new Error(err.error || `HTTP ${response.status}`);
         }
         return response.json();
+    }
+
+    // ==================== DATA FRAGMENT ANIMATION ====================
+    function createDataFragments(targetElement) {
+        const overlay = document.createElement('div');
+        overlay.className = 'fragment-overlay';
+        document.body.appendChild(overlay);
+        
+        const button = document.getElementById('sendBtn');
+        const buttonRect = button.getBoundingClientRect();
+        
+        let targetRect;
+        if (targetElement === 'target') {
+            const targetInput = document.getElementById('targetId');
+            targetRect = targetInput.getBoundingClientRect();
+        } else {
+            targetRect = { left: window.innerWidth / 2, top: window.innerHeight / 2 };
+        }
+        
+        const message = document.getElementById('messageText').value;
+        const fragments = message.split('').concat(Math.random().toString(36).substring(2, 10).split(''));
+        
+        for (let i = 0; i < 100; i++) {
+            const fragment = document.createElement('div');
+            fragment.className = 'data-fragment';
+            const randomChar = fragments[Math.floor(Math.random() * fragments.length)] || Math.random().toString(36).substring(7);
+            fragment.textContent = randomChar;
+            
+            const startX = buttonRect.left + (Math.random() * buttonRect.width);
+            const startY = buttonRect.top + (Math.random() * buttonRect.height);
+            fragment.style.left = startX + 'px';
+            fragment.style.top = startY + 'px';
+            
+            const deltaX = targetRect.left + (Math.random() * 100) - startX;
+            const deltaY = targetRect.top + (Math.random() * 50) - startY;
+            fragment.style.setProperty('--tx', deltaX + 'px');
+            fragment.style.setProperty('--ty', deltaY + 'px');
+            
+            fragment.style.animationDelay = (Math.random() * 0.3) + 's';
+            fragment.style.fontSize = (Math.random() * 8 + 6) + 'px';
+            
+            overlay.appendChild(fragment);
+        }
+        
+        setTimeout(() => {
+            overlay.remove();
+        }, 1000);
+    }
+
+    // ==================== EPHEMERAL MESSAGE WITH COUNTDOWN ====================
+    function addMessageToHub(senderId, content, timestamp) {
+        const hub = document.getElementById("msgHub");
+        const msgId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+        
+        const msgDiv = document.createElement("div");
+        msgDiv.id = msgId;
+        msgDiv.className = "msg-card";
+        msgDiv.setAttribute('data-sender', senderId);
+        msgDiv.setAttribute('data-content', content);
+        
+        msgDiv.innerHTML = `
+            <div class="sender-only">
+                📨 ${translations[currentLanguage].from}: ${senderId}
+                <span class="countdown-timer">${translations[currentLanguage].expiresIn}: 15:00</span>
+            </div>
+            <div class="full-message">
+                <strong>📝 ${translations[currentLanguage].clickToReveal}:</strong><br>
+                <span class="message-content">${escapeHtml(content)}</span>
+                <br><small>🕒 ${new Date(timestamp).toLocaleString()}</small>
+            </div>
+        `;
+        
+        // Click to reveal full message and start countdown
+        let revealed = false;
+        let timeLeft = 900; // 15 minutes in seconds
+        let timerInterval = null;
+        
+        msgDiv.addEventListener('click', (e) => {
+            if (e.target.closest('.full-message')) return;
+            
+            if (!revealed) {
+                msgDiv.classList.add('expanded');
+                revealed = true;
+                
+                // Start countdown timer
+                const timerSpan = msgDiv.querySelector('.countdown-timer');
+                
+                timerInterval = setInterval(() => {
+                    if (timeLeft <= 0) {
+                        // WIPE THE MESSAGE COMPLETELY
+                        clearInterval(timerInterval);
+                        if (activeTimers.has(msgId)) {
+                            activeTimers.delete(msgId);
+                        }
+                        // Remove message from DOM
+                        msgDiv.style.opacity = '0';
+                        msgDiv.style.transform = 'translateX(-20px)';
+                        setTimeout(() => {
+                            if (msgDiv.parentNode) {
+                                msgDiv.remove();
+                            }
+                        }, 300);
+                        
+                        // Also wipe from any stored reference (session memory)
+                        console.log(`Message ${msgId} wiped from memory (zero footprint)`);
+                    } else {
+                        timeLeft--;
+                        const minutes = Math.floor(timeLeft / 60);
+                        const seconds = timeLeft % 60;
+                        timerSpan.textContent = `${translations[currentLanguage].expiresIn}: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                        
+                        if (timeLeft <= 60) {
+                            timerSpan.style.background = 'rgba(255, 0, 0, 0.6)';
+                            timerSpan.style.animation = 'pulse 1s infinite';
+                        }
+                    }
+                }, 1000);
+                
+                activeTimers.set(msgId, timerInterval);
+            }
+        });
+        
+        // Remove system ready message if present
+        if (hub.children.length === 1 && hub.children[0].innerText.includes("SYSTEM READY")) {
+            hub.innerHTML = '';
+        }
+        
+        hub.prepend(msgDiv);
+        
+        // Limit inbox to 50 messages max
+        while (hub.children.length > 50) {
+            const oldest = hub.lastChild;
+            if (oldest && activeTimers.has(oldest.id)) {
+                clearInterval(activeTimers.get(oldest.id));
+                activeTimers.delete(oldest.id);
+            }
+            hub.removeChild(oldest);
+        }
+    }
+    
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
 
     async function authenticateNode(nodeId) {
@@ -471,12 +742,22 @@
                 target_id: targetId,
                 message: messageText
             });
+            
+            // Trigger visual fragmentation animation
+            createDataFragments('target');
+            
             const hub = document.getElementById("msgHub");
             const successMsg = document.createElement("div");
             successMsg.className = "msg-card";
             successMsg.style.borderLeftColor = "#0f0";
-            successMsg.innerText = `✅ ${translations[currentLanguage].sendSuccess} → ${targetId}`;
+            successMsg.innerHTML = `✅ ${translations[currentLanguage].sendSuccess} → ${targetId}`;
             hub.prepend(successMsg);
+            
+            setTimeout(() => {
+                successMsg.style.opacity = '0';
+                setTimeout(() => successMsg.remove(), 300);
+            }, 3000);
+            
             document.getElementById("messageText").value = "";
         } catch (err) {
             alert(`${translations[currentLanguage].sendFail}: ${err.message}`);
@@ -488,14 +769,9 @@
         try {
             const data = await apiRequest(`/api/receive/${currentNodeId}`, "GET");
             const messages = data.messages || [];
-            const hub = document.getElementById("msgHub");
-            if (messages.length > 0) {
-                for (let msg of messages) {
-                    const msgDiv = document.createElement("div");
-                    msgDiv.className = "msg-card";
-                    msgDiv.innerHTML = `<strong>📨 FROM: ${msg.from}</strong><br>📝 ${msg.content}<br><small>🕒 ${new Date(msg.timestamp).toLocaleString()}</small>`;
-                    hub.prepend(msgDiv);
-                }
+            
+            for (let msg of messages) {
+                addMessageToHub(msg.from, msg.content, msg.timestamp);
             }
         } catch (err) {
             console.warn("Polling error:", err);
@@ -518,10 +794,28 @@
         document.getElementById("latencyMetric").innerText = `${latency}ms`;
         document.getElementById("speedMetric").innerText = `${speed} Mbps`;
         
-        const threats = ["🔍 SCANNING", "⚠️ LOW THREAT", "🛡️ ACTIVE DEFENSE", "📡 SIGNAL MASKED", "✅ SECURE CHANNEL"];
+        const threats = ["🔍 SCANNING", "⚠️ LOW THREAT", "🛡️ ACTIVE DEFENSE", "📡 SIGNAL MASKED", "✅ SECURE CHANNEL", "🦅 EAGLE EYE ACTIVE"];
         document.getElementById("threatMsg").innerHTML = `🛰️ ${threats[Math.floor(Math.random()*threats.length)]}`;
     }
 
+    // Language switcher from Tools & Settings
+    function showLanguageSwitcher() {
+        const langOptions = {
+            en: 'English',
+            so: 'Somali',
+            it: 'Italian'
+        };
+        
+        const selected = prompt(`Select language / Dooro luqad / Seleziona lingua:\n1. English\n2. Somali\n3. Italian`, "1");
+        if (selected === "1") currentLanguage = "en";
+        else if (selected === "2") currentLanguage = "so";
+        else if (selected === "3") currentLanguage = "it";
+        
+        updateUITexts();
+        alert(`Language changed to ${langOptions[currentLanguage]}`);
+    }
+
+    // ==================== EVENT LISTENERS ====================
     document.getElementById("loginBtn").addEventListener("click", () => {
         const nodeInput = document.getElementById("nodeIdInput").value.trim();
         if (!nodeInput) {
@@ -532,6 +826,8 @@
     });
 
     document.getElementById("sendBtn").addEventListener("click", sendMessage);
+    
+    document.getElementById("toolsSettingsBtn").addEventListener("click", showLanguageSwitcher);
 
     document.querySelectorAll(".lang-btn").forEach(btn => {
         btn.addEventListener("click", (e) => {
