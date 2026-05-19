@@ -1,9 +1,13 @@
 import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)  # Allow cross-origin requests from frontend
+
+# ==================== HARDCODED CREDENTIALS ====================
+RENDER_API_KEY = "rnd_W8LBVZ1k7opxzqXMspxdPAuPVzPK"
 
 # ==================== SECURE NODE WHITELIST (500 IDs) ====================
 ALLOWED_NODES = [
@@ -59,28 +63,34 @@ ALLOWED_NODES = [
     "50h90", "51j10", "52k20", "53m30", "54n40", "55p50", "56q60", "57r70", "58s80", "59t90"
 ]
 
-# Ephemeral message buffer: { "target_node_id": [list of messages] }
+# Ephemeral message buffer
 message_buffer = {}
 
-# ==================== API KEY AUTHENTICATION ====================
-REQUIRED_API_KEY = os.environ.get("RENDER_API_KEY", "default-super-secret-key-change-in-production")
-
-def require_api_key():
-    """Middleware to check for valid API key in X-API-Key header."""
+# ==================== API KEY VALIDATION ====================
+def validate_api_key():
     api_key = request.headers.get("X-API-Key")
-    if not api_key or api_key != REQUIRED_API_KEY:
+    if not api_key or api_key != RENDER_API_KEY:
         return False
     return True
 
 # ==================== ROUTES ====================
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({
+        "system": "Eagle Secure App",
+        "status": "operational",
+        "version": "1.0.0"
+    }), 200
+
 @app.route("/api/health", methods=["GET"])
 def health_check():
-    """Public health check endpoint."""
     return jsonify({"status": "operational", "system": "Eagle Secure App"}), 200
 
 @app.route("/api/authorize", methods=["POST"])
 def authorize_node():
-    """Verify if a Node ID is whitelisted."""
+    if not validate_api_key():
+        return jsonify({"error": "Invalid API Key"}), 401
+    
     data = request.get_json()
     if not data or "node_id" not in data:
         return jsonify({"error": "Missing node_id"}), 400
@@ -93,10 +103,8 @@ def authorize_node():
 
 @app.route("/api/send", methods=["POST"])
 def send_message():
-    """Send a message to a target Node ID (ephemeral storage)."""
-    # Authenticate API key
-    if not require_api_key():
-        return jsonify({"error": "Invalid or missing API key"}), 401
+    if not validate_api_key():
+        return jsonify({"error": "Invalid API Key"}), 401
     
     data = request.get_json()
     if not data:
@@ -106,19 +114,15 @@ def send_message():
     target_id = data.get("target_id")
     message = data.get("message")
     
-    # Validate all fields present
     if not sender_id or not target_id or not message:
-        return jsonify({"error": "Missing required fields: sender_id, target_id, message"}), 400
+        return jsonify({"error": "Missing required fields"}), 400
     
-    # Validate sender is whitelisted
     if sender_id not in ALLOWED_NODES:
         return jsonify({"error": "Sender Node ID not authorized"}), 401
     
-    # Validate target is whitelisted
     if target_id not in ALLOWED_NODES:
         return jsonify({"error": "Target Node ID not authorized"}), 401
     
-    # Store message in buffer for target
     if target_id not in message_buffer:
         message_buffer[target_id] = []
     
@@ -126,39 +130,27 @@ def send_message():
         "from": sender_id,
         "to": target_id,
         "content": message,
-        "timestamp": str(__import__("datetime").datetime.utcnow())
+        "timestamp": datetime.utcnow().isoformat()
     })
     
     return jsonify({"status": "sent", "to": target_id}), 200
 
 @app.route("/api/receive/<node_id>", methods=["GET"])
 def receive_messages(node_id):
-    """Retrieve and instantly delete (ephemeral) messages for a Node ID."""
-    # Authenticate API key
-    if not require_api_key():
-        return jsonify({"error": "Invalid or missing API key"}), 401
+    if not validate_api_key():
+        return jsonify({"error": "Invalid API Key"}), 401
     
-    # Validate Node ID
     if node_id not in ALLOWED_NODES:
         return jsonify({"error": "Node ID not authorized"}), 401
     
-    # Get messages for this node
     messages = message_buffer.get(node_id, [])
     
-    # EPHEMERAL DELETE: clear messages immediately after retrieval
+    # EPHEMERAL: Delete messages immediately after retrieval
     if node_id in message_buffer:
         message_buffer[node_id] = []
     
     return jsonify({"node_id": node_id, "messages": messages}), 200
 
-@app.route("/api/allowed_nodes", methods=["GET"])
-def get_allowed_nodes():
-    """Return the full whitelist (for frontend validation)."""
-    if not require_api_key():
-        return jsonify({"error": "Invalid or missing API key"}), 401
-    return jsonify({"allowed_nodes": ALLOWED_NODES}), 200
-
-# ==================== RUN SERVER ====================
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)

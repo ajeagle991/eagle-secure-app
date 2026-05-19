@@ -19,7 +19,6 @@
             padding: 20px;
         }
 
-        /* MAIN DASHBOARD GRID */
         .dashboard {
             max-width: 1600px;
             margin: 0 auto;
@@ -29,7 +28,6 @@
             backdrop-filter: blur(2px);
         }
 
-        /* GLASSMORPHISM BASE */
         .glass-panel {
             background: rgba(10, 20, 30, 0.65);
             backdrop-filter: blur(14px);
@@ -39,7 +37,6 @@
             transition: all 0.2s ease;
         }
 
-        /* LEFT SIDEBAR */
         .sidebar {
             padding: 24px 16px;
             display: flex;
@@ -92,7 +89,6 @@
             transform: translateX(6px);
         }
 
-        /* CENTER CONSOLE */
         .console {
             padding: 24px;
             display: flex;
@@ -180,7 +176,6 @@
             color: #bfe;
         }
 
-        /* RIGHT RADAR PANEL */
         .radar-panel {
             padding: 20px;
             display: flex;
@@ -217,7 +212,6 @@
             text-align: center;
         }
 
-        /* BOTTOM METRICS BAR */
         .metrics-bar {
             grid-column: 1 / -1;
             display: grid;
@@ -241,14 +235,13 @@
             color: #0ff;
         }
 
-        /* LOGIN MODAL */
         .modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.95);
             backdrop-filter: blur(12px);
             display: flex;
             align-items: center;
@@ -257,12 +250,12 @@
         }
 
         .modal-content {
-            background: rgba(10, 20, 30, 0.9);
+            background: rgba(10, 20, 30, 0.95);
             backdrop-filter: blur(20px);
             border: 1px solid #0ff;
             border-radius: 32px;
             padding: 40px;
-            width: 360px;
+            width: 380px;
             text-align: center;
         }
 
@@ -280,10 +273,22 @@
             padding: 5px 12px;
             border-radius: 20px;
             cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .lang-btn:hover {
+            background: #0ff;
+            color: #000;
         }
 
         .hidden {
             display: none;
+        }
+
+        .error-text {
+            color: #f44;
+            font-size: 12px;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -295,6 +300,7 @@
         <p id="loginPrompt" style="color:#ccf; margin:20px 0">ENTER YOUR NODE ID</p>
         <input type="text" id="nodeIdInput" class="glow-input" placeholder="e.g., 10a23" style="width:100%">
         <button id="loginBtn" class="send-btn" style="margin-top:20px">AUTHENTICATE</button>
+        <div id="loginError" class="error-text"></div>
         <div class="lang-switch">
             <button class="lang-btn" data-lang="en">EN</button>
             <button class="lang-btn" data-lang="so">SO</button>
@@ -304,7 +310,6 @@
 </div>
 
 <div id="mainApp" class="dashboard hidden">
-    <!-- LEFT SIDEBAR -->
     <div class="sidebar glass-panel">
         <div class="logo-area">
             <h1>◈ EAGLE SECURE ◈</h1>
@@ -318,7 +323,6 @@
         </div>
     </div>
 
-    <!-- CENTER CONSOLE -->
     <div class="console glass-panel">
         <div class="console-header">
             <h2>🔐 SECURE MESSAGES TERMINAL</h2>
@@ -340,7 +344,6 @@
         </div>
     </div>
 
-    <!-- RIGHT RADAR PANEL -->
     <div class="radar-panel glass-panel">
         <div class="radar-title">🛰️ ACTIVE SURVEILLANCE</div>
         <div class="radar-graphic">
@@ -349,7 +352,6 @@
         <div class="threat-text" id="threatMsg">🔴 4 active signals | ECCM active</div>
     </div>
 
-    <!-- BOTTOM METRICS BAR -->
     <div class="metrics-bar">
         <div class="metric-card">💻 CPU UTILIZATION<br><span id="cpuMetric" class="metric-value">0%</span></div>
         <div class="metric-card">🌐 NETWORK LATENCY<br><span id="latencyMetric" class="metric-value">0ms</span></div>
@@ -358,59 +360,9 @@
 </div>
 
 <script>
-    // ==================== CONFIGURATION ====================
+    // ==================== HARDCODED CREDENTIALS ====================
     const SERVER_URL = "https://eagle-secure-app.onrender.com";
     const API_KEY = "rnd_W8LBVZ1k7opxzqXMspxdPAuPVzPK";
-    
-    "20m23", "21n45", "22p67", "23q89", "24r01", "25s23", "26t45", "27u67", "28v89", "29w01",
-    "30x23", "31y45", "32z67", "33a89", "34b01", "35c23", "36d45", "37e67", "38f89", "39g01",
-    "40h23", "41j45", "42k67", "43m89", "44n01", "45p23", "46q45", "47r67", "48s89", "49t01",
-    "50u23", "51v45", "52w67", "53x89", "54y01", "55z23", "56a45", "57b67", "58c89", "59d01",
-    "60e23", "61f45", "62g67", "63h89", "64j01", "65k23", "66m45", "67n67", "68p89", "69q01",
-    "70r23", "71s45", "72t67", "73u89", "74v01", "75w23", "76x45", "77y67", "78z89", "79a01",
-    "80b23", "81c45", "82d67", "83e89", "84f01", "85g23", "86h45", "87j67", "88k89", "89m01",
-    "90n23", "91p45", "92q67", "93r89", "94s01", "95t23", "96u45", "97v67", "98w89", "99x01",
-    "10y11", "11z22", "12a33", "13b44", "14c55", "15d66", "16e77", "17f88", "18g99", "19h00",
-    "20j11", "21k22", "22m33", "23n44", "24p55", "25q66", "26r77", "27s88", "28t99", "29u00",
-    "30v11", "31w22", "32x33", "33y44", "34z55", "35a66", "36b77", "37c88", "38d99", "39e00",
-    "40f11", "41g22", "42h33", "43j44", "44k55", "45m66", "46n77", "47p88", "48q99", "49r00",
-    "50s11", "51t22", "52u33", "53v44", "54w55", "55x66", "56y77", "57z88", "58a99", "59b00",
-    "60c11", "61d22", "62e33", "63f44", "64g55", "65h66", "66j77", "67k88", "68m99", "69n00",
-    "70p11", "71q22", "72r33", "73s44", "74t55", "75u66", "76v77", "77w88", "78x99", "79y00",
-    "80z11", "81a22", "82b33", "83c44", "84d55", "85e66", "86f77", "87g88", "88h99", "89j00",
-    "90k11", "91m22", "92n33", "93p44", "94q55", "95r66", "96s77", "97t88", "98u99", "99v00",
-    "10w12", "11x34", "12y56", "13z78", "14a90", "15b12", "16c34", "17d56", "18e78", "19f90",
-    "20g12", "21h34", "22j56", "23k78", "24m90", "25n12", "26p34", "27q56", "28r78", "29s90",
-    "30t12", "31u34", "32v56", "33w78", "34x90", "35y12", "36z34", "37a56", "38b78", "39c90",
-    "40d12", "41e34", "42f56", "43g78", "44h90", "45j12", "46k34", "47m56", "48n78", "49p90",
-    "50q12", "51r34", "52s56", "53t78", "54u90", "55v12", "56w34", "57x56", "58y78", "59z90",
-    "60a12", "61b34", "62c56", "63d78", "64e90", "65f12", "66g34", "67h56", "68j78", "69k90",
-    "70m12", "71n34", "72p56", "73q78", "74r90", "75s12", "76t34", "77u56", "78v78", "79w90",
-    "80x12", "81y34", "82z56", "83a78", "84b90", "85c12", "86d34", "87e56", "88f78", "89g90",
-    "90h12", "91j34", "92k56", "93m78", "94n90", "95p12", "96q34", "97r56", "98s78", "99t90",
-    "10u43", "11v21", "12w87", "13x65", "14y09", "15z43", "16a21", "17b87", "18c65", "19d09",
-    "20e43", "21f21", "22g87", "23h65", "24j09", "25k43", "26m21", "27n87", "28p65", "29q09",
-    "30r43", "31s21", "32t87", "33u65", "34v09", "35w43", "36x21", "37y87", "38z65", "39a09",
-    "40b43", "41c21", "42d87", "43e65", "44f09", "45g43", "46h21", "47j87", "48k65", "49m09",
-    "50n43", "51p21", "52q87", "53r65", "54s09", "55t43", "56u21", "57v87", "58w65", "59x09",
-    "60y43", "61z21", "62a87", "63b65", "64c09", "65d43", "66e21", "67f87", "68g65", "69h09",
-    "70j43", "71k21", "72m87", "73n65", "74p09", "75q43", "76r21", "77s87", "78t65", "79u09",
-    "80v43", "81w21", "82x87", "83y65", "84z09", "85a43", "86b21", "87c87", "88d65", "89e09",
-    "90f43", "91g21", "92h87", "93j65", "94k09", "95m43", "96n21", "97p87", "98q65", "99r09",
-    "10s55", "11t66", "12u77", "13v88", "14w99", "15x00", "16y11", "17z22", "18a33", "19b44",
-    "20c55", "21d66", "22e77", "23f88", "24g99", "25h00", "26j11", "27k22", "28m33", "29n44",
-    "30p55", "31q66", "32r77", "33s88", "34t99", "35u00", "36v11", "37w22", "38x33", "39y44",
-    "40z55", "41a66", "42b77", "43c88", "44d99", "45e00", "46f11", "47g22", "48h33", "49j44",
-    "50k55", "51m66", "52n77", "53p88", "54q99", "55r00", "56s11", "57t22", "58u33", "59v44",
-    "60w55", "61x66", "62y77", "63z88", "64a99", "65b00", "66c11", "67d22", "68e33", "69f44",
-    "70g55", "71h66", "72j77", "73k88", "74m99", "75n00", "76p11", "77q22", "78r33", "79s44",
-    "80t55", "81u66", "82v77", "83w88", "84x99", "85y00", "86z11", "87a22", "88b33", "89c44",
-    "90d55", "91e66", "92f77", "93g88", "94h99", "95j00", "96k11", "97m22", "98n33", "99p44",
-    "10q50", "11r60", "12s70", "13t80", "14u90", "15v10", "16w20", "17x30", "18y40", "19z50",
-    "20a60", "21b70", "22c80", "23d90", "24e10", "25f20", "26g30", "27h40", "28j50", "29k60",
-    "30m70", "31n80", "32p90", "33q10", "34r20", "35s30", "36t40", "37u50", "38v60", "39w70",
-    "40x80", "41y90", "42z10", "43a20", "44b30", "45c40", "46d50", "47e60", "48f70", "49g80",
-    "50h90", "51j10", "52k20", "53m30", "54n40", "55p50", "56q60", "57r70", "58s80", "59t90"  // MUST match RENDER_API_KEY env var
 
     let currentLanguage = "en";
     let currentNodeId = null;
@@ -424,8 +376,9 @@
             messageLabel: "📝 ENCRYPTED MESSAGE STRING",
             sendSuccess: "✓ Message transmitted",
             sendFail: "✗ Transmission failed",
-            authFail: "❌ Unauthorized Node ID",
-            systemReady: "◆ SYSTEM READY ◆"
+            authFail: "Unauthorized Node ID",
+            systemReady: "◆ SYSTEM READY ◆",
+            networkError: "Network error. Check connection."
         },
         so: {
             loginPrompt: "GELI AQOONSIGA NODE ID",
@@ -433,8 +386,9 @@
             messageLabel: "📝 FARIIMTA SIRTA AH",
             sendSuccess: "✓ Farriinta la direy",
             sendFail: "✗ Diritaan ku guuldareystay",
-            authFail: "❌ Node ID aan la oggolayn",
-            systemReady: "◆ NIDAAMKA DIIYAAR ◆"
+            authFail: "Node ID aan la oggolayn",
+            systemReady: "◆ NIDAAMKA DIIYAAR ◆",
+            networkError: "Qalad xiriir. Hubi isku xirka."
         },
         it: {
             loginPrompt: "INSERISCI IL TUO NODE ID",
@@ -442,19 +396,21 @@
             messageLabel: "📝 MESSAGGIO CRITTATO",
             sendSuccess: "✓ Messaggio trasmesso",
             sendFail: "✗ Trasmissione fallita",
-            authFail: "❌ Node ID non autorizzato",
-            systemReady: "◆ SISTEMA PRONTO ◆"
+            authFail: "Node ID non autorizzato",
+            systemReady: "◆ SISTEMA PRONTO ◆",
+            networkError: "Errore di rete. Controlla la connessione."
         }
     };
 
     function updateUITexts() {
         if (!currentLanguage) return;
         document.getElementById("loginPrompt").innerText = translations[currentLanguage].loginPrompt;
-        document.getElementById("targetLabel").innerText = translations[currentLanguage].targetLabel;
-        document.getElementById("messageLabel").innerText = translations[currentLanguage].messageLabel;
+        if (document.getElementById("targetLabel")) {
+            document.getElementById("targetLabel").innerText = translations[currentLanguage].targetLabel;
+            document.getElementById("messageLabel").innerText = translations[currentLanguage].messageLabel;
+        }
     }
 
-    // ==================== HELPER: API REQUEST WITH AUTH ====================
     async function apiRequest(endpoint, method, body = null) {
         const headers = {
             "X-API-Key": API_KEY,
@@ -471,8 +427,10 @@
         return response.json();
     }
 
-    // ==================== LOGIN AUTH ====================
     async function authenticateNode(nodeId) {
+        const errorDiv = document.getElementById("loginError");
+        errorDiv.innerText = "";
+        
         try {
             const result = await apiRequest("/api/authorize", "POST", { node_id: nodeId });
             if (result.authorized) {
@@ -481,24 +439,24 @@
                 document.getElementById("loginModal").classList.add("hidden");
                 document.getElementById("mainApp").classList.remove("hidden");
                 startPolling();
-                fetchMessages(); // immediate fetch
+                fetchMessages();
                 return true;
             } else {
-                alert(translations[currentLanguage].authFail);
+                errorDiv.innerText = translations[currentLanguage].authFail;
                 return false;
             }
         } catch (err) {
-            alert(`${translations[currentLanguage].authFail}: ${err.message}`);
+            errorDiv.innerText = err.message;
             return false;
         }
     }
 
-    // ==================== SEND MESSAGE ====================
     async function sendMessage() {
         if (!currentNodeId) {
             alert("Session expired. Relogin required.");
             return;
         }
+        
         const targetId = document.getElementById("targetId").value.trim();
         const messageText = document.getElementById("messageText").value.trim();
         
@@ -525,7 +483,6 @@
         }
     }
 
-    // ==================== FETCH & EPHEMERAL RETRIEVAL ====================
     async function fetchMessages() {
         if (!currentNodeId) return;
         try {
@@ -536,7 +493,7 @@
                 for (let msg of messages) {
                     const msgDiv = document.createElement("div");
                     msgDiv.className = "msg-card";
-                    msgDiv.innerHTML = `<strong>📨 FROM: ${msg.from}</strong><br>📝 ${msg.content}<br><small>🕒 ${msg.timestamp}</small>`;
+                    msgDiv.innerHTML = `<strong>📨 FROM: ${msg.from}</strong><br>📝 ${msg.content}<br><small>🕒 ${new Date(msg.timestamp).toLocaleString()}</small>`;
                     hub.prepend(msgDiv);
                 }
             }
@@ -553,7 +510,6 @@
         }, 2000);
     }
 
-    // ==================== LIVE METRICS SIMULATION ====================
     function updateMetrics() {
         const cpu = Math.floor(Math.random() * 40) + 15;
         const latency = Math.floor(Math.random() * 80) + 12;
@@ -561,20 +517,22 @@
         document.getElementById("cpuMetric").innerText = `${cpu}%`;
         document.getElementById("latencyMetric").innerText = `${latency}ms`;
         document.getElementById("speedMetric").innerText = `${speed} Mbps`;
-        const threats = ["🔍 SCANNING", "⚠️ LOW THREAT", "🛡️ ACTIVE DEFENSE", "📡 SIGNAL MASKED"];
+        
+        const threats = ["🔍 SCANNING", "⚠️ LOW THREAT", "🛡️ ACTIVE DEFENSE", "📡 SIGNAL MASKED", "✅ SECURE CHANNEL"];
         document.getElementById("threatMsg").innerHTML = `🛰️ ${threats[Math.floor(Math.random()*threats.length)]}`;
     }
 
-    // ==================== EVENT LISTENERS ====================
     document.getElementById("loginBtn").addEventListener("click", () => {
         const nodeInput = document.getElementById("nodeIdInput").value.trim();
-        if (!nodeInput) return;
+        if (!nodeInput) {
+            document.getElementById("loginError").innerText = "Please enter a Node ID";
+            return;
+        }
         authenticateNode(nodeInput);
     });
 
     document.getElementById("sendBtn").addEventListener("click", sendMessage);
 
-    // Language switching
     document.querySelectorAll(".lang-btn").forEach(btn => {
         btn.addEventListener("click", (e) => {
             currentLanguage = e.target.getAttribute("data-lang");
@@ -582,10 +540,8 @@
         });
     });
 
-    // Initial language set
     updateUITexts();
     
-    // Allow Enter key on login
     document.getElementById("nodeIdInput").addEventListener("keypress", (e) => {
         if (e.key === "Enter") document.getElementById("loginBtn").click();
     });
