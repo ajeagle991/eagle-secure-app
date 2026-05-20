@@ -1,4 +1,5 @@
 import os
+import sqlite3
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datetime import datetime
@@ -63,6 +64,25 @@ ALLOWED_NODES = [
     "50h90", "51j10", "52k20", "53m30", "54n40", "55p50", "56q60", "57r70", "58s80", "59t90"
 ]
 
+# ==================== DATABASE SETUP (Permanent Vault Storage) ====================
+def init_db():
+    conn = sqlite3.connect('eagle_vault.db')
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS secure_vault
+                 (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                  node_id TEXT NOT NULL,
+                  item_id INTEGER NOT NULL,
+                  label TEXT NOT NULL,
+                  encrypted_data TEXT NOT NULL,
+                  item_type TEXT NOT NULL,
+                  original_name TEXT,
+                  mime_type TEXT,
+                  timestamp TEXT NOT NULL)''')
+    conn.commit()
+    conn.close()
+
+init_db()
+
 # Ephemeral message buffer
 message_buffer = {}
 
@@ -73,13 +93,104 @@ def validate_api_key():
         return False
     return True
 
-# ==================== ROUTES ====================
+# ==================== VAULT API ROUTES ====================
+@app.route("/api/vault/save", methods=["POST"])
+def vault_save():
+    if not validate_api_key():
+        return jsonify({"error": "Invalid API Key"}), 401
+    
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Invalid request body"}), 400
+    
+    node_id = data.get("node_id")
+    label = data.get("label")
+    encrypted_data = data.get("encrypted_data")
+    item_type = data.get("item_type", "text")
+    original_name = data.get("original_name")
+    mime_type = data.get("mime_type")
+    item_id = data.get("item_id", int(datetime.utcnow().timestamp() * 1000))
+    
+    if not node_id or not label or not encrypted_data:
+        return jsonify({"error": "Missing required fields"}), 400
+    
+    if node_id not in ALLOWED_NODES:
+        return jsonify({"error": "Node ID not authorized"}), 401
+    
+    conn = sqlite3.connect('eagle_vault.db')
+    c = conn.cursor()
+    c.execute('''INSERT INTO secure_vault 
+                 (node_id, item_id, label, encrypted_data, item_type, original_name, mime_type, timestamp)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
+              (node_id, item_id, label, encrypted_data, item_type, original_name, mime_type, datetime.utcnow().isoformat()))
+    conn.commit()
+    conn.close()
+    
+    return jsonify({"status": "saved", "item_id": item_id}), 200
+
+@app.route("/api/vault/load/<node_id>", methods=["GET"])
+def vault_load(node_id):
+    if not validate_api_key():
+        return jsonify({"error": "Invalid API Key"}), 401
+    
+    if node_id not in ALLOWED_NODES:
+        return jsonify({"error": "Node ID not authorized"}), 401
+    
+    conn = sqlite3.connect('eagle_vault.db')
+    c = conn.cursor()
+    c.execute('''SELECT id, item_id, label, encrypted_data, item_type, original_name, mime_type, timestamp 
+                 FROM secure_vault WHERE node_id = ? ORDER BY timestamp DESC''', (node_id,))
+    rows = c.fetchall()
+    conn.close()
+    
+    items = []
+    for row in rows:
+        items.append({
+            "db_id": row[0],
+            "id": row[1],
+            "label": row[2],
+            "encrypted": row[3],
+            "itemType": row[4],
+            "originalName": row[5],
+            "mimeType": row[6],
+            "timestamp": row[7]
+        })
+    
+    return jsonify({"node_id": node_id, "items": items}), 200
+
+@app.route("/api/vault/wipe", methods=["POST"])
+def vault_wipe():
+    if not validate_api_key():
+        return jsonify({"error": "Invalid API Key"}), 401
+    
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Invalid request body"}), 400
+    
+    node_id = data.get("node_id")
+    item_id = data.get("item_id")  # The client-side generated ID
+    
+    if not node_id or not item_id:
+        return jsonify({"error": "Missing node_id or item_id"}), 400
+    
+    if node_id not in ALLOWED_NODES:
+        return jsonify({"error": "Node ID not authorized"}), 401
+    
+    conn = sqlite3.connect('eagle_vault.db')
+    c = conn.cursor()
+    c.execute('DELETE FROM secure_vault WHERE node_id = ? AND item_id = ?', (node_id, item_id))
+    conn.commit()
+    conn.close()
+    
+    return jsonify({"status": "wiped"}), 200
+
+# ==================== MESSAGING API ROUTES (Existing) ====================
 @app.route("/", methods=["GET"])
 def home():
     return jsonify({
         "system": "Eagle Secure App",
         "status": "operational",
-        "version": "1.0.0"
+        "version": "2.0.0"
     }), 200
 
 @app.route("/api/health", methods=["GET"])

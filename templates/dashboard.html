@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/neon/96/eagle.png">
+    <link rel="icon" type="image/png" href="https://img.icons8.com/neon/96/eagle.png">
     <title>EAGLE SECURE APP | Classified Communication Terminal</title>
     <style>
         * {
@@ -420,7 +424,7 @@
             letter-spacing: 2px;
         }
 
-        /* Secure Local Vault - UPGRADED */
+        /* Secure Local Vault - CLOUD SYNC VERSION */
         .secure-vault {
             background: rgba(0, 0, 0, 0.4);
             border-radius: 20px;
@@ -556,6 +560,13 @@
             height: 200px;
             border: none;
             border-radius: 8px;
+        }
+
+        .vault-sync-status {
+            font-size: 8px;
+            text-align: center;
+            margin-top: 6px;
+            color: #0fa;
         }
 
         /* File Cloaker */
@@ -898,7 +909,7 @@
         <div class="alert-status" id="mobileAlertStatus">🟢 SECURE: NO ACTIVE THREATS</div>
     </div>
     <div class="secure-vault">
-        <div class="vault-title">🔐 SECURE LOCAL VAULT (AES Encrypted)</div>
+        <div class="vault-title">🔐 SECURE CLOUD VAULT (AES Encrypted)</div>
         <div class="vault-input-group">
             <input type="text" id="mobileVaultLabel" class="vault-label-input" placeholder="Label/title">
             <textarea id="mobileVaultContent" class="vault-textarea" rows="2" placeholder="Secret text or paste data..."></textarea>
@@ -909,6 +920,7 @@
             <div id="mobileVaultFileInfo" class="vault-file-info"></div>
         </div>
         <div id="mobileVaultItems" class="vault-items"></div>
+        <div class="vault-sync-status" id="mobileVaultSyncStatus">☁️ Cloud synced</div>
         <input type="file" id="mobileVaultFileInput" style="display: none;" accept="image/*,application/pdf,.txt,.doc,.docx,.png,.jpg,.jpeg">
     </div>
     <div class="file-cloaker" style="margin-top: 20px;">
@@ -986,9 +998,9 @@
         </div>
         <div class="threat-text" id="threatMsg">🔴 4 active signals | ECCM active</div>
         
-        <!-- Secure Local Storage Vault - UPGRADED with File Upload -->
+        <!-- Secure Cloud Vault - PERMANENT MULTI-DEVICE SYNC -->
         <div class="secure-vault">
-            <div class="vault-title">🔐 SECURE LOCAL VAULT (AES Encrypted)</div>
+            <div class="vault-title">🔐 SECURE CLOUD VAULT (AES Encrypted)</div>
             <div class="vault-input-group">
                 <input type="text" id="vaultLabel" class="vault-label-input" placeholder="Label/title">
                 <textarea id="vaultContent" class="vault-textarea" rows="2" placeholder="Secret text or paste data..."></textarea>
@@ -999,6 +1011,7 @@
                 <div id="vaultFileInfo" class="vault-file-info"></div>
             </div>
             <div id="vaultItems" class="vault-items"></div>
+            <div class="vault-sync-status" id="vaultSyncStatus">☁️ Cloud synced</div>
             <input type="file" id="vaultFileInput" style="display: none;" accept="image/*,application/pdf,.txt,.doc,.docx,.png,.jpg,.jpeg">
         </div>
         
@@ -1037,7 +1050,6 @@
     let currentAttachmentType = null;
     let currentAudioBase64 = null;
     let currentAudioDuration = 0;
-    let pendingVaultFile = null; // For vault file upload
     
     // Audio recording variables
     let mediaRecorder = null;
@@ -1116,7 +1128,68 @@
         return new TextDecoder().decode(decrypted);
     }
 
-    // ==================== VAULT FUNCTIONS (Text + Files) ====================
+    // ==================== CLOUD VAULT API FUNCTIONS ====================
+    async function cloudVaultSave(label, encryptedData, itemType, originalName = null, mimeType = null, itemId = null) {
+        const payload = {
+            node_id: currentNodeId,
+            label: label,
+            encrypted_data: encryptedData,
+            item_type: itemType,
+            original_name: originalName,
+            mime_type: mimeType,
+            item_id: itemId || Date.now()
+        };
+        
+        const response = await fetch(`${SERVER_URL}/api/vault/save`, {
+            method: "POST",
+            headers: {
+                "X-API-Key": API_KEY,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+        
+        if (!response.ok) {
+            throw new Error("Failed to save to cloud vault");
+        }
+        return response.json();
+    }
+    
+    async function cloudVaultLoad() {
+        const response = await fetch(`${SERVER_URL}/api/vault/load/${currentNodeId}`, {
+            method: "GET",
+            headers: {
+                "X-API-Key": API_KEY,
+                "Content-Type": "application/json"
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error("Failed to load vault from cloud");
+        }
+        return response.json();
+    }
+    
+    async function cloudVaultWipe(itemId) {
+        const response = await fetch(`${SERVER_URL}/api/vault/wipe`, {
+            method: "POST",
+            headers: {
+                "X-API-Key": API_KEY,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                node_id: currentNodeId,
+                item_id: itemId
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error("Failed to wipe vault item");
+        }
+        return response.json();
+    }
+
+    // ==================== VAULT FUNCTIONS (Cloud Sync) ====================
     async function saveToVault(label, content, isFile = false, fileName = null, fileType = null, fileBase64 = null) {
         if (!label) {
             alert("Please enter a label/title");
@@ -1127,6 +1200,7 @@
         let itemType = "text";
         let originalName = null;
         let mimeType = null;
+        let itemId = Date.now();
         
         if (isFile && fileBase64) {
             dataToEncrypt = JSON.stringify({
@@ -1147,18 +1221,123 @@
         }
         
         const encrypted = await encryptData(dataToEncrypt);
-        const vault = JSON.parse(localStorage.getItem("eagle_secure_vault") || "[]");
-        vault.push({ 
-            id: Date.now(), 
-            label, 
-            encrypted, 
-            itemType,
-            originalName,
-            mimeType,
-            timestamp: new Date().toISOString() 
-        });
-        localStorage.setItem("eagle_secure_vault", JSON.stringify(vault));
-        renderVault();
+        
+        try {
+            await cloudVaultSave(label, encrypted, itemType, originalName, mimeType, itemId);
+            updateSyncStatus("Saved to cloud ✓", true);
+            await renderVault();
+        } catch (err) {
+            console.error("Cloud save error:", err);
+            updateSyncStatus("Sync failed!", false);
+            alert("Failed to save to cloud. Check connection.");
+        }
+    }
+    
+    async function renderVault() {
+        const vaultContainer = document.getElementById("vaultItems");
+        const mobileVaultContainer = document.getElementById("mobileVaultItems");
+        
+        try {
+            const data = await cloudVaultLoad();
+            const items = data.items || [];
+            
+            const renderItems = (container) => {
+                if (!container) return;
+                container.innerHTML = "";
+                for (let item of items) {
+                    const div = document.createElement("div");
+                    div.className = "vault-item";
+                    const typeIcon = item.itemType === "text" ? "📝" : (item.itemType === "image" ? "🖼️" : (item.itemType === "pdf" ? "📑" : "📎"));
+                    const typeClass = `type-${item.itemType === "text" ? "text" : (item.itemType === "image" ? "image" : (item.itemType === "pdf" ? "pdf" : "file"))}`;
+                    div.innerHTML = `
+                        <strong>${typeIcon} ${escapeHtml(item.label)}</strong>
+                        <span class="vault-item-type ${typeClass}">${item.itemType}</span><br>
+                        <small>${new Date(item.timestamp).toLocaleString()}</small>
+                        <div class="vault-item-buttons">
+                            <button class="vault-decrypt" data-id="${item.id}">🔓 Decrypt & View</button>
+                            <button class="vault-wipe" data-id="${item.id}">🗑️ Wipe</button>
+                        </div>
+                        <div class="vault-preview" style="display:none;"></div>
+                    `;
+                    container.appendChild(div);
+                }
+                
+                container.querySelectorAll(".vault-decrypt").forEach(btn => {
+                    btn.addEventListener("click", async (e) => {
+                        const id = parseInt(btn.getAttribute("data-id"));
+                        const item = items.find(i => i.id === id);
+                        if (item) {
+                            const decryptedJson = await decryptData(item.encrypted);
+                            const data = JSON.parse(decryptedJson);
+                            const previewDiv = btn.closest(".vault-item").querySelector(".vault-preview");
+                            previewDiv.style.display = "block";
+                            
+                            if (data.type === "text") {
+                                previewDiv.innerHTML = `<span style="color:#0fa;">📄 ${escapeHtml(data.content)}</span>`;
+                            } else if (data.type === "file") {
+                                if (data.mimeType && data.mimeType.startsWith("image/")) {
+                                    previewDiv.innerHTML = `<img src="${data.base64}" alt="Preview" style="max-width:100%; border-radius:8px;"><br><button class="vault-download-btn" style="margin-top:8px;">💾 Download File</button>`;
+                                } else {
+                                    previewDiv.innerHTML = `<div style="background:rgba(0,255,255,0.1); padding:10px; border-radius:8px;">
+                                        📁 ${escapeHtml(data.fileName)} (${data.mimeType})<br>
+                                        <button class="vault-download-btn" style="margin-top:8px;">💾 Download File</button>
+                                    </div>`;
+                                }
+                                
+                                previewDiv.querySelectorAll(".vault-download-btn").forEach(dlBtn => {
+                                    dlBtn.addEventListener("click", () => {
+                                        const link = document.createElement("a");
+                                        link.href = data.base64;
+                                        link.download = data.fileName || "vault_file";
+                                        document.body.appendChild(link);
+                                        link.click();
+                                        document.body.removeChild(link);
+                                    });
+                                });
+                            }
+                        }
+                    });
+                });
+                
+                container.querySelectorAll(".vault-wipe").forEach(btn => {
+                    btn.addEventListener("click", async (e) => {
+                        const id = parseInt(btn.getAttribute("data-id"));
+                        if (confirm("Permanently wipe this item from the cloud? This cannot be undone.")) {
+                            try {
+                                await cloudVaultWipe(id);
+                                updateSyncStatus("Item wiped from cloud ✓", true);
+                                await renderVault();
+                            } catch (err) {
+                                updateSyncStatus("Wipe failed!", false);
+                            }
+                        }
+                    });
+                });
+            };
+            
+            renderItems(vaultContainer);
+            renderItems(mobileVaultContainer);
+            updateSyncStatus("Cloud vault loaded ✓", true);
+        } catch (err) {
+            console.error("Load vault error:", err);
+            updateSyncStatus("Failed to load cloud vault", false);
+        }
+    }
+    
+    function updateSyncStatus(message, isSuccess) {
+        const statusDiv = document.getElementById("vaultSyncStatus");
+        const mobileStatusDiv = document.getElementById("mobileVaultSyncStatus");
+        if (statusDiv) {
+            statusDiv.innerHTML = `☁️ ${message}`;
+            statusDiv.style.color = isSuccess ? "#0fa" : "#f66";
+            setTimeout(() => {
+                if (statusDiv) statusDiv.style.color = "#0fa";
+            }, 3000);
+        }
+        if (mobileStatusDiv) {
+            mobileStatusDiv.innerHTML = `☁️ ${message}`;
+            mobileStatusDiv.style.color = isSuccess ? "#0fa" : "#f66";
+        }
     }
     
     function getFileTypeIcon(type) {
@@ -1166,141 +1345,6 @@
         if (type === "image") return "🖼️";
         if (type === "pdf") return "📑";
         return "📎";
-    }
-    
-    function getFileTypeClass(type) {
-        if (type === "text") return "type-text";
-        if (type === "image") return "type-image";
-        if (type === "pdf") return "type-pdf";
-        return "type-file";
-    }
-    
-    async function renderVault() {
-        const vaultContainer = document.getElementById("vaultItems");
-        const mobileVaultContainer = document.getElementById("mobileVaultItems");
-        const vault = JSON.parse(localStorage.getItem("eagle_secure_vault") || "[]");
-        
-        const renderItems = (container) => {
-            if (!container) return;
-            container.innerHTML = "";
-            const sortedVault = [...vault].reverse().slice(0, 15);
-            for (let item of sortedVault) {
-                const div = document.createElement("div");
-                div.className = "vault-item";
-                const typeIcon = getFileTypeIcon(item.itemType);
-                const typeClass = getFileTypeClass(item.itemType);
-                div.innerHTML = `
-                    <strong>${typeIcon} ${escapeHtml(item.label)}</strong>
-                    <span class="vault-item-type ${typeClass}">${item.itemType}</span><br>
-                    <small>${new Date(item.timestamp).toLocaleString()}</small>
-                    <div class="vault-item-buttons">
-                        <button class="vault-decrypt" data-id="${item.id}">🔓 Decrypt & View</button>
-                        <button class="vault-wipe" data-id="${item.id}">🗑️ Wipe</button>
-                    </div>
-                    <div class="vault-preview" style="display:none;"></div>
-                `;
-                container.appendChild(div);
-            }
-            
-            container.querySelectorAll(".vault-decrypt").forEach(btn => {
-                btn.addEventListener("click", async (e) => {
-                    const id = parseInt(btn.getAttribute("data-id"));
-                    const item = vault.find(i => i.id === id);
-                    if (item) {
-                        const decryptedJson = await decryptData(item.encrypted);
-                        const data = JSON.parse(decryptedJson);
-                        const previewDiv = btn.closest(".vault-item").querySelector(".vault-preview");
-                        previewDiv.style.display = "block";
-                        
-                        if (data.type === "text") {
-                            previewDiv.innerHTML = `<span style="color:#0fa;">📄 ${escapeHtml(data.content)}</span>`;
-                        } else if (data.type === "file") {
-                            if (data.mimeType && data.mimeType.startsWith("image/")) {
-                                previewDiv.innerHTML = `<img src="${data.base64}" alt="Preview"><br><button class="vault-download-btn" style="margin-top:8px;">💾 Download File</button>`;
-                            } else {
-                                previewDiv.innerHTML = `<div style="background:rgba(0,255,255,0.1); padding:10px; border-radius:8px;">
-                                    📁 ${escapeHtml(data.fileName)} (${data.mimeType})<br>
-                                    <button class="vault-download-btn" style="margin-top:8px;">💾 Download File</button>
-                                </div>`;
-                            }
-                            
-                            previewDiv.querySelectorAll(".vault-download-btn").forEach(dlBtn => {
-                                dlBtn.addEventListener("click", () => {
-                                    const link = document.createElement("a");
-                                    link.href = data.base64;
-                                    link.download = data.fileName || "vault_file";
-                                    document.body.appendChild(link);
-                                    link.click();
-                                    document.body.removeChild(link);
-                                });
-                            });
-                        }
-                    }
-                });
-            });
-            
-            container.querySelectorAll(".vault-wipe").forEach(btn => {
-                btn.addEventListener("click", async (e) => {
-                    const id = parseInt(btn.getAttribute("data-id"));
-                    let vaultData = JSON.parse(localStorage.getItem("eagle_secure_vault") || "[]");
-                    vaultData = vaultData.filter(i => i.id !== id);
-                    localStorage.setItem("eagle_secure_vault", JSON.stringify(vaultData));
-                    renderVault();
-                });
-            });
-        };
-        
-        renderItems(vaultContainer);
-        renderItems(mobileVaultContainer);
-    }
-    
-    // Vault file upload handler
-    function setupVaultFileUpload(vaultFileInputId, fileInfoDivId, isMobile = false) {
-        const fileInput = document.getElementById(vaultFileInputId);
-        const fileInfoDiv = document.getElementById(fileInfoDivId);
-        
-        if (!fileInput) return;
-        
-        fileInput.addEventListener("change", async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            
-            const maxSize = 10 * 1024 * 1024;
-            if (file.size > maxSize) {
-                alert("File too large. Maximum 10MB for vault storage.");
-                return;
-            }
-            
-            const reader = new FileReader();
-            reader.onload = async function(evt) {
-                const base64Data = evt.target.result;
-                const label = isMobile ? document.getElementById("mobileVaultLabel").value.trim() : document.getElementById("vaultLabel").value.trim();
-                
-                if (!label) {
-                    alert("Please enter a label for this file first");
-                    return;
-                }
-                
-                await saveToVault(label, null, true, file.name, file.type, base64Data);
-                
-                if (isMobile) {
-                    document.getElementById("mobileVaultLabel").value = "";
-                    document.getElementById("mobileVaultFileInfo").innerHTML = "";
-                } else {
-                    document.getElementById("vaultLabel").value = "";
-                    document.getElementById("vaultFileInfo").innerHTML = "";
-                }
-                fileInput.value = "";
-            };
-            reader.readAsDataURL(file);
-            
-            if (fileInfoDiv) {
-                fileInfoDiv.innerHTML = `📎 Selected: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
-                setTimeout(() => {
-                    if (fileInfoDiv) fileInfoDiv.innerHTML = "";
-                }, 3000);
-            }
-        });
     }
 
     // ==================== AUDIO RECORDING ====================
@@ -1807,7 +1851,7 @@
                 initCyberMap("mobileCyberCanvas", "mobileAlertStatus");
                 setupFileCloaker("dropZone", "fileInfo", "fileInput");
                 setupFileCloaker("mobileDropZone", "mobileFileInfo", "fileInput");
-                renderVault();
+                await renderVault(); // Load cloud vault
                 return true;
             } else {
                 errorDiv.innerText = translations[currentLanguage].authFail;
@@ -1969,6 +2013,55 @@
         
         if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
         if (overlay) overlay.addEventListener('click', closeDrawer);
+    }
+
+    // ==================== VAULT FILE UPLOAD HANDLERS ====================
+    function setupVaultFileUpload(vaultFileInputId, fileInfoDivId, isMobile = false) {
+        const fileInput = document.getElementById(vaultFileInputId);
+        const fileInfoDiv = document.getElementById(fileInfoDivId);
+        
+        if (!fileInput) return;
+        
+        fileInput.addEventListener("change", async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const maxSize = 10 * 1024 * 1024;
+            if (file.size > maxSize) {
+                alert("File too large. Maximum 10MB for vault storage.");
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = async function(evt) {
+                const base64Data = evt.target.result;
+                const label = isMobile ? document.getElementById("mobileVaultLabel").value.trim() : document.getElementById("vaultLabel").value.trim();
+                
+                if (!label) {
+                    alert("Please enter a label for this file first");
+                    return;
+                }
+                
+                await saveToVault(label, null, true, file.name, file.type, base64Data);
+                
+                if (isMobile) {
+                    document.getElementById("mobileVaultLabel").value = "";
+                    document.getElementById("mobileVaultFileInfo").innerHTML = "";
+                } else {
+                    document.getElementById("vaultLabel").value = "";
+                    document.getElementById("vaultFileInfo").innerHTML = "";
+                }
+                fileInput.value = "";
+            };
+            reader.readAsDataURL(file);
+            
+            if (fileInfoDiv) {
+                fileInfoDiv.innerHTML = `📎 Selected: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+                setTimeout(() => {
+                    if (fileInfoDiv) fileInfoDiv.innerHTML = "";
+                }, 3000);
+            }
+        });
     }
 
     // ==================== EVENT LISTENERS ====================
