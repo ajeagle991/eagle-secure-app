@@ -5,7 +5,7 @@ from flask_cors import CORS
 from datetime import datetime
 
 app = Flask(__name__)
-CORS(app)  # Allow cross-origin requests from frontend
+CORS(app)
 
 # ==================== HARDCODED CREDENTIALS ====================
 RENDER_API_KEY = "rnd_W8LBVZ1k7opxzqXMspxdPAuPVzPK"
@@ -64,7 +64,7 @@ ALLOWED_NODES = [
     "50h90", "51j10", "52k20", "53m30", "54n40", "55p50", "56q60", "57r70", "58s80", "59t90"
 ]
 
-# ==================== DATABASE SETUP (Permanent Vault Storage) ====================
+# ==================== DATABASE SETUP ====================
 def init_db():
     conn = sqlite3.connect('eagle_vault.db')
     c = conn.cursor()
@@ -83,10 +83,8 @@ def init_db():
 
 init_db()
 
-# Ephemeral message buffer
 message_buffer = {}
 
-# ==================== API KEY VALIDATION ====================
 def validate_api_key():
     api_key = request.headers.get("X-API-Key")
     if not api_key or api_key != RENDER_API_KEY:
@@ -168,7 +166,7 @@ def vault_wipe():
         return jsonify({"error": "Invalid request body"}), 400
     
     node_id = data.get("node_id")
-    item_id = data.get("item_id")  # The client-side generated ID
+    item_id = data.get("item_id")
     
     if not node_id or not item_id:
         return jsonify({"error": "Missing node_id or item_id"}), 400
@@ -184,14 +182,10 @@ def vault_wipe():
     
     return jsonify({"status": "wiped"}), 200
 
-# ==================== MESSAGING API ROUTES (Existing) ====================
+# ==================== MESSAGING API ROUTES ====================
 @app.route("/", methods=["GET"])
 def home():
-    return jsonify({
-        "system": "Eagle Secure App",
-        "status": "operational",
-        "version": "2.0.0"
-    }), 200
+    return jsonify({"system": "Eagle Secure App", "status": "operational", "version": "2.0.0"}), 200
 
 @app.route("/api/health", methods=["GET"])
 def health_check():
@@ -269,7 +263,6 @@ def receive_messages(node_id):
     
     messages = message_buffer.get(node_id, [])
     
-    # EPHEMERAL: Delete messages immediately after retrieval
     if node_id in message_buffer:
         message_buffer[node_id] = []
     
