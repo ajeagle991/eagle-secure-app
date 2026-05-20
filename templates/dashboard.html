@@ -5,8 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="https://img.icons8.com/neon/96/eagle.png">
-    <link rel="icon" type="image/png" href="https://img.icons8.com/neon/96/eagle.png">
+    <meta name="theme-color" content="#0a0f1e">
+    
+    <!-- Professional Logo / Favicon for mobile & PC -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%230a0f1e' stroke='%230ff' stroke-width='2'/%3E%3Cpath d='M50 20 L65 45 L55 45 L55 80 L45 80 L45 45 L35 45 Z' fill='%230ff'/%3E%3Cpath d='M30 35 L70 35 L65 42 L35 42 Z' fill='%230ff'/%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%230a0f1e' stroke='%230ff' stroke-width='2'/%3E%3Cpath d='M50 20 L65 45 L55 45 L55 80 L45 80 L45 45 L35 45 Z' fill='%230ff'/%3E%3Cpath d='M30 35 L70 35 L65 42 L35 42 Z' fill='%230ff'/%3E%3C/svg%3E">
+    
     <title>EAGLE SECURE APP | Classified Communication Terminal</title>
     <style>
         * {
@@ -23,6 +27,7 @@
             padding: 20px;
         }
 
+        /* ==================== DESKTOP LAYOUT (DEFAULT) ==================== */
         .dashboard {
             max-width: 1600px;
             margin: 0 auto;
@@ -41,6 +46,7 @@
             transition: all 0.2s ease;
         }
 
+        /* ==================== LEFT SIDEBAR ==================== */
         .sidebar {
             padding: 24px 16px;
             display: flex;
@@ -54,6 +60,19 @@
             text-align: center;
             border-bottom: 1px solid rgba(0, 255, 255, 0.3);
             padding-bottom: 20px;
+        }
+        
+        .logo-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .logo-svg {
+            width: 60px;
+            height: 60px;
+            filter: drop-shadow(0 0 8px #0ff);
         }
 
         .logo-area h1 {
@@ -95,6 +114,7 @@
             transform: translateX(6px);
         }
 
+        /* Live Cyber Attack Map */
         .cyber-map-container {
             margin-top: auto;
             background: rgba(0, 0, 0, 0.4);
@@ -127,6 +147,7 @@
             color: #fa0;
         }
 
+        /* ==================== CENTER CONSOLE ==================== */
         .console {
             padding: 24px;
             display: flex;
@@ -328,7 +349,7 @@
             color: #ff8888;
         }
 
-        .download-attachment-btn, .play-audio-btn {
+        .download-attachment-btn, .play-audio-btn, .view-file-btn {
             background: rgba(0, 255, 255, 0.2);
             border: 1px solid #0ff;
             border-radius: 20px;
@@ -339,13 +360,91 @@
             font-size: 11px;
             color: #0ff;
             transition: 0.2s;
+            display: inline-block;
         }
 
-        .download-attachment-btn:hover, .play-audio-btn:hover {
+        .download-attachment-btn:hover, .play-audio-btn:hover, .view-file-btn:hover {
             background: #0ff;
             color: #000;
         }
 
+        /* ==================== IMAGE/PDF VIEWER MODAL ==================== */
+        .viewer-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .viewer-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .viewer-content {
+            max-width: 90vw;
+            max-height: 90vh;
+            background: rgba(10, 20, 30, 0.9);
+            border-radius: 24px;
+            border: 2px solid #0ff;
+            padding: 20px;
+            position: relative;
+            overflow: auto;
+        }
+        
+        .viewer-close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 32px;
+            color: #0ff;
+            cursor: pointer;
+            z-index: 2001;
+            background: rgba(0,0,0,0.5);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .viewer-close:hover {
+            background: #0ff;
+            color: #000;
+        }
+        
+        .viewer-content img {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 12px;
+        }
+        
+        .viewer-content iframe {
+            width: 80vw;
+            height: 80vh;
+            border: none;
+            border-radius: 12px;
+        }
+        
+        @media (max-width: 768px) {
+            .viewer-content iframe {
+                width: 95vw;
+                height: 70vh;
+            }
+        }
+
+        /* ==================== RIGHT SIDEBAR ==================== */
         .right-sidebar {
             padding: 20px;
             display: flex;
@@ -419,6 +518,7 @@
             letter-spacing: 2px;
         }
 
+        /* Secure Local Vault - CLOUD SYNC VERSION */
         .secure-vault {
             background: rgba(0, 0, 0, 0.4);
             border-radius: 20px;
@@ -547,6 +647,19 @@
         .vault-preview img {
             max-width: 100%;
             border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .vault-preview img:hover {
+            opacity: 0.9;
+            box-shadow: 0 0 10px #0ff;
+        }
+
+        .vault-preview iframe {
+            width: 100%;
+            height: 200px;
+            border: none;
+            border-radius: 8px;
         }
 
         .vault-sync-status {
@@ -556,45 +669,7 @@
             color: #0fa;
         }
 
-        /* Image Modal for Vault Preview */
-        .image-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
-            backdrop-filter: blur(20px);
-            z-index: 10000;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-
-        .image-modal.active {
-            display: flex;
-        }
-
-        .image-modal img {
-            max-width: 90%;
-            max-height: 80%;
-            border: 2px solid #0ff;
-            border-radius: 16px;
-            box-shadow: 0 0 40px rgba(0,255,255,0.3);
-        }
-
-        .image-modal-close {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            font-size: 40px;
-            color: #0ff;
-            cursor: pointer;
-            background: none;
-            border: none;
-        }
-
+        /* File Cloaker */
         .file-cloaker {
             margin-top: auto;
             background: rgba(0, 0, 0, 0.5);
@@ -667,6 +742,7 @@
             text-align: center;
         }
 
+        /* Bottom Metrics Bar */
         .metrics-bar {
             grid-column: 1 / -1;
             display: grid;
@@ -690,6 +766,7 @@
             color: #0ff;
         }
 
+        /* Login Modal */
         .modal {
             position: fixed;
             top: 0;
@@ -712,6 +789,11 @@
             padding: 40px;
             width: 380px;
             text-align: center;
+        }
+        
+        .login-logo {
+            width: 80px;
+            margin-bottom: 20px;
         }
 
         .lang-switch {
@@ -746,6 +828,7 @@
             margin-top: 10px;
         }
 
+        /* Fragment Animation */
         .fragment-overlay {
             position: fixed;
             top: 0;
@@ -778,10 +861,21 @@
             }
         }
 
+        /* ==================== MOBILE RESPONSIVE ==================== */
         @media (max-width: 968px) {
-            body { padding: 10px; }
-            .dashboard { grid-template-columns: 1fr; gap: 12px; }
-            .sidebar, .right-sidebar, .console { min-height: auto; }
+            body {
+                padding: 10px;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .sidebar, .right-sidebar, .console {
+                min-height: auto;
+            }
+            
             .mobile-drawer-toggle {
                 position: fixed;
                 bottom: 20px;
@@ -800,6 +894,7 @@
                 align-items: center;
                 justify-content: center;
             }
+            
             .mobile-drawer {
                 position: fixed;
                 top: 0;
@@ -814,7 +909,11 @@
                 padding: 20px;
                 overflow-y: auto;
             }
-            .mobile-drawer.open { left: 0; }
+            
+            .mobile-drawer.open {
+                left: 0;
+            }
+            
             .mobile-drawer-overlay {
                 position: fixed;
                 top: 0;
@@ -825,7 +924,11 @@
                 z-index: 199;
                 display: none;
             }
-            .mobile-drawer-overlay.open { display: block; }
+            
+            .mobile-drawer-overlay.open {
+                display: block;
+            }
+            
             .mobile-close {
                 position: absolute;
                 top: 10px;
@@ -834,30 +937,54 @@
                 color: #0ff;
                 cursor: pointer;
             }
-            .sidebar, .right-sidebar { display: none; }
-            .console { width: 100%; }
-            .metrics-bar { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-            .metric-value { font-size: 20px; }
-            .message-input-wrapper { flex-direction: column; }
-            .mic-btn { align-self: flex-end; }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .right-sidebar {
+                display: none;
+            }
+            
+            .console {
+                width: 100%;
+            }
+            
+            .metrics-bar {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+            
+            .metric-value {
+                font-size: 20px;
+            }
+            
+            .message-input-wrapper {
+                flex-direction: column;
+            }
+            
+            .mic-btn {
+                align-self: flex-end;
+            }
         }
         
         @media (min-width: 969px) {
-            .mobile-drawer-toggle, .mobile-drawer, .mobile-drawer-overlay { display: none; }
+            .mobile-drawer-toggle, .mobile-drawer, .mobile-drawer-overlay {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
 
-<!-- Image Modal for Vault Preview -->
-<div id="imageModal" class="image-modal">
-    <button class="image-modal-close" id="imageModalClose">✕</button>
-    <img id="modalImage" src="" alt="Secure Preview">
-</div>
-
 <!-- Login Modal -->
 <div id="loginModal" class="modal">
     <div class="modal-content">
+        <svg class="login-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="45" fill="#0a0f1e" stroke="#0ff" stroke-width="2"/>
+            <path d="M50 20 L65 45 L55 45 L55 80 L45 80 L45 45 L35 45 Z" fill="#0ff"/>
+            <path d="M30 35 L70 35 L65 42 L35 42 Z" fill="#0ff"/>
+        </svg>
         <h2 style="color:#0ff">⚡ EAGLE SECURE ⚡</h2>
         <p id="loginPrompt" style="color:#ccf; margin:20px 0">ENTER YOUR NODE ID</p>
         <input type="text" id="nodeIdInput" class="glow-input" placeholder="e.g., 10a23" style="width:100%">
@@ -871,13 +998,26 @@
     </div>
 </div>
 
+<!-- IMAGE/PDF VIEWER MODAL -->
+<div id="viewerModal" class="viewer-modal">
+    <div class="viewer-close" id="viewerClose">✕</div>
+    <div class="viewer-content" id="viewerContent"></div>
+</div>
+
 <!-- Mobile Drawer Elements -->
 <button class="mobile-drawer-toggle" id="mobileDrawerToggle">☰</button>
 <div class="mobile-drawer-overlay" id="mobileDrawerOverlay"></div>
 <div class="mobile-drawer" id="mobileDrawer">
     <div class="mobile-close" id="mobileClose">✕</div>
     <div class="logo-area">
-        <h1>◈ EAGLE SECURE ◈</h1>
+        <div class="logo-wrapper">
+            <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" fill="#0a0f1e" stroke="#0ff" stroke-width="2"/>
+                <path d="M50 20 L65 45 L55 45 L55 80 L45 80 L45 45 L35 45 Z" fill="#0ff"/>
+                <path d="M30 35 L70 35 L65 42 L35 42 Z" fill="#0ff"/>
+            </svg>
+            <h1>◈ EAGLE SECURE ◈</h1>
+        </div>
         <div class="badge" id="mobileNodeBadge">NODE: ---</div>
     </div>
     <div class="nav-menu" style="margin-bottom: 20px;">
@@ -918,9 +1058,17 @@
 
 <!-- Main Dashboard -->
 <div id="mainApp" class="dashboard hidden">
+    <!-- LEFT SIDEBAR -->
     <div class="sidebar glass-panel">
         <div class="logo-area">
-            <h1>◈ EAGLE SECURE ◈</h1>
+            <div class="logo-wrapper">
+                <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" fill="#0a0f1e" stroke="#0ff" stroke-width="2"/>
+                    <path d="M50 20 L65 45 L55 45 L55 80 L45 80 L45 45 L35 45 Z" fill="#0ff"/>
+                    <path d="M30 35 L70 35 L65 42 L35 42 Z" fill="#0ff"/>
+                </svg>
+                <h1>◈ EAGLE SECURE ◈</h1>
+            </div>
             <div class="badge" id="activeNodeBadge">NODE: ---</div>
         </div>
         <div class="nav-menu">
@@ -929,6 +1077,7 @@
             <div class="nav-item">⚠️ THREAT HANDLER</div>
             <div class="nav-item" id="toolsSettingsBtn">⚙️ TOOLS & SETTINGS</div>
         </div>
+        
         <div class="cyber-map-container">
             <div class="cyber-map-title">🌐 LIVE CYBER ATTACK MAP</div>
             <canvas id="cyberCanvas" width="248" height="180"></canvas>
@@ -936,6 +1085,7 @@
         </div>
     </div>
 
+    <!-- CENTER CONSOLE -->
     <div class="console glass-panel">
         <div class="console-header">
             <h2>🦅 EAGLE 🦅 MESSAGE GHOST</h2>
@@ -966,6 +1116,7 @@
         </div>
     </div>
 
+    <!-- RIGHT SIDEBAR -->
     <div class="right-sidebar glass-panel">
         <div class="radar-title">🛰️ ACTIVE SURVEILLANCE</div>
         <div class="radar-graphic">
@@ -977,6 +1128,7 @@
         </div>
         <div class="threat-text" id="threatMsg">🔴 4 active signals | ECCM active</div>
         
+        <!-- Secure Cloud Vault - PERMANENT MULTI-DEVICE SYNC -->
         <div class="secure-vault">
             <div class="vault-title">🔐 SECURE CLOUD VAULT (AES Encrypted)</div>
             <div class="vault-input-group">
@@ -993,6 +1145,7 @@
             <input type="file" id="vaultFileInput" style="display: none;" accept="image/*,application/pdf,.txt,.doc,.docx,.png,.jpg,.jpeg">
         </div>
         
+        <!-- Secure File Cloaker -->
         <div class="file-cloaker" id="fileCloaker">
             <div class="cloaker-title">🔒 SECURE FILE / IMAGE CLOAKER</div>
             <div class="drop-zone" id="dropZone">
@@ -1005,6 +1158,7 @@
         </div>
     </div>
 
+    <!-- BOTTOM METRICS BAR -->
     <div class="metrics-bar">
         <div class="metric-card">💻 CPU UTILIZATION<br><span id="cpuMetric" class="metric-value">0%</span></div>
         <div class="metric-card">🌐 NETWORK LATENCY<br><span id="latencyMetric" class="metric-value">0ms</span></div>
@@ -1013,6 +1167,7 @@
 </div>
 
 <script>
+    // ==================== HARDCODED CREDENTIALS ====================
     const SERVER_URL = "https://eagle-secure-app.onrender.com";
     const API_KEY = "rnd_W8LBVZ1k7opxzqXMspxdPAuPVzPK";
 
@@ -1026,13 +1181,60 @@
     let currentAudioBase64 = null;
     let currentAudioDuration = 0;
     
+    // Audio recording variables
     let mediaRecorder = null;
     let audioChunks = [];
     let isRecording = false;
     let recordingStartTime = null;
     let recordingInterval = null;
 
-    // ==================== AES ENCRYPTION/DECRYPTION ====================
+    // ==================== VIEWER FUNCTION ====================
+    function openViewer(fileData, fileType, fileName) {
+        const modal = document.getElementById("viewerModal");
+        const content = document.getElementById("viewerContent");
+        content.innerHTML = "";
+        
+        if (fileType && fileType.startsWith("image/")) {
+            const img = document.createElement("img");
+            img.src = fileData;
+            img.alt = fileName || "Image";
+            content.appendChild(img);
+        } 
+        else if (fileType === "application/pdf") {
+            const iframe = document.createElement("iframe");
+            iframe.src = fileData;
+            iframe.title = fileName || "PDF Document";
+            content.appendChild(iframe);
+        }
+        else {
+            // Fallback: show download option
+            content.innerHTML = `<div style="color:#0ff; text-align:center; padding:20px;">
+                <p>📄 ${fileName || "File"} (${fileType || "unknown type"})</p>
+                <button id="fallbackDownloadBtn" class="send-btn" style="margin-top:20px;">Download to View</button>
+            </div>`;
+            const downloadBtn = document.getElementById("fallbackDownloadBtn");
+            if (downloadBtn) {
+                downloadBtn.onclick = () => {
+                    const link = document.createElement("a");
+                    link.href = fileData;
+                    link.download = fileName || "secure_file";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                };
+            }
+        }
+        
+        modal.classList.add("active");
+    }
+    
+    function closeViewer() {
+        const modal = document.getElementById("viewerModal");
+        modal.classList.remove("active");
+        document.getElementById("viewerContent").innerHTML = "";
+    }
+
+    // ==================== AES ENCRYPTION FOR VAULT ====================
     async function encryptData(text, password = "eagle-secure-key-2024") {
         const encoder = new TextEncoder();
         const data = encoder.encode(text);
@@ -1045,14 +1247,23 @@
         );
         const salt = crypto.getRandomValues(new Uint8Array(16));
         const key = await crypto.subtle.deriveKey(
-            { name: "PBKDF2", salt: salt, iterations: 100000, hash: "SHA-256" },
+            {
+                name: "PBKDF2",
+                salt: salt,
+                iterations: 100000,
+                hash: "SHA-256"
+            },
             keyMaterial,
             { name: "AES-GCM", length: 256 },
             false,
             ["encrypt"]
         );
         const iv = crypto.getRandomValues(new Uint8Array(12));
-        const encrypted = await crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, key, data);
+        const encrypted = await crypto.subtle.encrypt(
+            { name: "AES-GCM", iv: iv },
+            key,
+            data
+        );
         const combined = new Uint8Array(salt.length + iv.length + encrypted.byteLength);
         combined.set(salt, 0);
         combined.set(iv, salt.length);
@@ -1074,17 +1285,26 @@
             ["deriveKey"]
         );
         const key = await crypto.subtle.deriveKey(
-            { name: "PBKDF2", salt: salt, iterations: 100000, hash: "SHA-256" },
+            {
+                name: "PBKDF2",
+                salt: salt,
+                iterations: 100000,
+                hash: "SHA-256"
+            },
             keyMaterial,
             { name: "AES-GCM", length: 256 },
             false,
             ["decrypt"]
         );
-        const decrypted = await crypto.subtle.decrypt({ name: "AES-GCM", iv: iv }, key, encrypted);
+        const decrypted = await crypto.subtle.decrypt(
+            { name: "AES-GCM", iv: iv },
+            key,
+            encrypted
+        );
         return new TextDecoder().decode(decrypted);
     }
 
-    // ==================== CLOUD VAULT API ====================
+    // ==================== CLOUD VAULT API FUNCTIONS ====================
     async function cloudVaultSave(label, encryptedData, itemType, originalName = null, mimeType = null, itemId = null) {
         const payload = {
             node_id: currentNodeId,
@@ -1095,95 +1315,62 @@
             mime_type: mimeType,
             item_id: itemId || Date.now()
         };
+        
         const response = await fetch(`${SERVER_URL}/api/vault/save`, {
             method: "POST",
-            headers: { "X-API-Key": API_KEY, "Content-Type": "application/json" },
+            headers: {
+                "X-API-Key": API_KEY,
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(payload)
         });
-        if (!response.ok) throw new Error("Failed to save to cloud vault");
+        
+        if (!response.ok) {
+            throw new Error("Failed to save to cloud vault");
+        }
         return response.json();
     }
     
     async function cloudVaultLoad() {
         const response = await fetch(`${SERVER_URL}/api/vault/load/${currentNodeId}`, {
             method: "GET",
-            headers: { "X-API-Key": API_KEY, "Content-Type": "application/json" }
+            headers: {
+                "X-API-Key": API_KEY,
+                "Content-Type": "application/json"
+            }
         });
-        if (!response.ok) throw new Error("Failed to load vault from cloud");
+        
+        if (!response.ok) {
+            throw new Error("Failed to load vault from cloud");
+        }
         return response.json();
     }
     
     async function cloudVaultWipe(itemId) {
         const response = await fetch(`${SERVER_URL}/api/vault/wipe`, {
             method: "POST",
-            headers: { "X-API-Key": API_KEY, "Content-Type": "application/json" },
-            body: JSON.stringify({ node_id: currentNodeId, item_id: itemId })
+            headers: {
+                "X-API-Key": API_KEY,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                node_id: currentNodeId,
+                item_id: itemId
+            })
         });
-        if (!response.ok) throw new Error("Failed to wipe vault item");
+        
+        if (!response.ok) {
+            throw new Error("Failed to wipe vault item");
+        }
         return response.json();
     }
 
-    // ==================== FIXED DECRYPT & VIEW FUNCTION ====================
-    async function decryptAndViewFile(item) {
-        try {
-            const decryptedJson = await decryptData(item.encrypted);
-            const fileData = JSON.parse(decryptedJson);
-            
-            if (fileData.type === "text") {
-                alert("Text content:\n\n" + fileData.content);
-                return;
-            }
-            
-            if (fileData.type === "file") {
-                const mimeType = fileData.mimeType || "application/octet-stream";
-                const base64String = fileData.base64;
-                
-                // Extract the actual base64 data (remove data:image/png;base64, prefix if present)
-                let rawBase64 = base64String;
-                if (base64String.includes(',')) {
-                    rawBase64 = base64String.split(',')[1];
-                }
-                
-                // For images: show in modal
-                if (mimeType.startsWith('image/')) {
-                    const modal = document.getElementById('imageModal');
-                    const modalImg = document.getElementById('modalImage');
-                    modalImg.src = base64String;
-                    modal.classList.add('active');
-                    
-                    const closeModal = () => modal.classList.remove('active');
-                    document.getElementById('imageModalClose').onclick = closeModal;
-                    modal.onclick = (e) => { if (e.target === modal) closeModal(); };
-                    return;
-                }
-                
-                // For PDFs and other documents: download as blob
-                const byteCharacters = atob(rawBase64);
-                const byteNumbers = new Array(byteCharacters.length);
-                for (let i = 0; i < byteCharacters.length; i++) {
-                    byteNumbers[i] = byteCharacters.charCodeAt(i);
-                }
-                const byteArray = new Uint8Array(byteNumbers);
-                const blob = new Blob([byteArray], { type: mimeType });
-                const url = URL.createObjectURL(blob);
-                
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = fileData.fileName || "secure_document";
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
-                return;
-            }
-        } catch (err) {
-            console.error("Decrypt error:", err);
-            alert("Failed to decrypt file. The data may be corrupted.");
-        }
-    }
-
+    // ==================== VAULT FUNCTIONS (Cloud Sync) ====================
     async function saveToVault(label, content, isFile = false, fileName = null, fileType = null, fileBase64 = null) {
-        if (!label) { alert("Please enter a label/title"); return; }
+        if (!label) {
+            alert("Please enter a label/title");
+            return;
+        }
         
         let dataToEncrypt;
         let itemType = "text";
@@ -1202,7 +1389,10 @@
             originalName = fileName;
             mimeType = fileType;
         } else {
-            dataToEncrypt = JSON.stringify({ type: "text", content: content });
+            dataToEncrypt = JSON.stringify({
+                type: "text",
+                content: content
+            });
             itemType = "text";
         }
         
@@ -1231,10 +1421,10 @@
                 if (!container) return;
                 container.innerHTML = "";
                 for (let item of items) {
-                    const typeIcon = item.itemType === "text" ? "📝" : (item.itemType === "image" ? "🖼️" : (item.itemType === "pdf" ? "📑" : "📎"));
-                    const typeClass = `type-${item.itemType === "text" ? "text" : (item.itemType === "image" ? "image" : (item.itemType === "pdf" ? "pdf" : "file"))}`;
                     const div = document.createElement("div");
                     div.className = "vault-item";
+                    const typeIcon = item.itemType === "text" ? "📝" : (item.itemType === "image" ? "🖼️" : (item.itemType === "pdf" ? "📑" : "📎"));
+                    const typeClass = `type-${item.itemType === "text" ? "text" : (item.itemType === "image" ? "image" : (item.itemType === "pdf" ? "pdf" : "file"))}`;
                     div.innerHTML = `
                         <strong>${typeIcon} ${escapeHtml(item.label)}</strong>
                         <span class="vault-item-type ${typeClass}">${item.itemType}</span><br>
@@ -1252,7 +1442,51 @@
                     btn.addEventListener("click", async (e) => {
                         const id = parseInt(btn.getAttribute("data-id"));
                         const item = items.find(i => i.id === id);
-                        if (item) await decryptAndViewFile(item);
+                        if (item) {
+                            const decryptedJson = await decryptData(item.encrypted);
+                            const data = JSON.parse(decryptedJson);
+                            const previewDiv = btn.closest(".vault-item").querySelector(".vault-preview");
+                            previewDiv.style.display = "block";
+                            
+                            if (data.type === "text") {
+                                previewDiv.innerHTML = `<span style="color:#0fa;">📄 ${escapeHtml(data.content)}</span>`;
+                            } else if (data.type === "file") {
+                                if (data.mimeType && data.mimeType.startsWith("image/")) {
+                                    previewDiv.innerHTML = `<img src="${data.base64}" alt="Preview" style="max-width:100%; border-radius:8px; cursor:pointer;"><br>
+                                        <button class="vault-download-btn" style="margin-top:8px;">💾 Download</button>
+                                        <button class="vault-view-btn" style="margin-top:8px; margin-left:8px;">👁️ View Fullscreen</button>`;
+                                    
+                                    const imgEl = previewDiv.querySelector("img");
+                                    if (imgEl) {
+                                        imgEl.addEventListener("click", () => openViewer(data.base64, data.mimeType, data.fileName));
+                                    }
+                                    previewDiv.querySelector(".vault-view-btn")?.addEventListener("click", () => openViewer(data.base64, data.mimeType, data.fileName));
+                                } else if (data.mimeType === "application/pdf") {
+                                    previewDiv.innerHTML = `<div style="background:rgba(0,255,255,0.1); padding:10px; border-radius:8px;">
+                                        📄 ${escapeHtml(data.fileName)} (PDF)<br>
+                                        <button class="vault-view-btn" style="margin-top:8px;">👁️ View PDF</button>
+                                        <button class="vault-download-btn" style="margin-top:8px; margin-left:8px;">💾 Download</button>
+                                    </div>`;
+                                    previewDiv.querySelector(".vault-view-btn")?.addEventListener("click", () => openViewer(data.base64, data.mimeType, data.fileName));
+                                } else {
+                                    previewDiv.innerHTML = `<div style="background:rgba(0,255,255,0.1); padding:10px; border-radius:8px;">
+                                        📁 ${escapeHtml(data.fileName)} (${data.mimeType})<br>
+                                        <button class="vault-download-btn" style="margin-top:8px;">💾 Download File</button>
+                                    </div>`;
+                                }
+                                
+                                previewDiv.querySelectorAll(".vault-download-btn").forEach(dlBtn => {
+                                    dlBtn.addEventListener("click", () => {
+                                        const link = document.createElement("a");
+                                        link.href = data.base64;
+                                        link.download = data.fileName || "vault_file";
+                                        document.body.appendChild(link);
+                                        link.click();
+                                        document.body.removeChild(link);
+                                    });
+                                });
+                            }
+                        }
                     });
                 });
                 
@@ -1287,7 +1521,9 @@
         if (statusDiv) {
             statusDiv.innerHTML = `☁️ ${message}`;
             statusDiv.style.color = isSuccess ? "#0fa" : "#f66";
-            setTimeout(() => { if (statusDiv) statusDiv.style.color = "#0fa"; }, 3000);
+            setTimeout(() => {
+                if (statusDiv) statusDiv.style.color = "#0fa";
+            }, 3000);
         }
         if (mobileStatusDiv) {
             mobileStatusDiv.innerHTML = `☁️ ${message}`;
@@ -1302,7 +1538,11 @@
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             mediaRecorder = new MediaRecorder(stream);
             audioChunks = [];
-            mediaRecorder.ondataavailable = (event) => audioChunks.push(event.data);
+            
+            mediaRecorder.ondataavailable = (event) => {
+                audioChunks.push(event.data);
+            };
+            
             mediaRecorder.onstop = async () => {
                 const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
                 const reader = new FileReader();
@@ -1316,18 +1556,24 @@
                 reader.readAsDataURL(audioBlob);
                 stream.getTracks().forEach(track => track.stop());
             };
+            
             mediaRecorder.start();
             isRecording = true;
             recordingStartTime = Date.now();
             document.getElementById("micBtn").classList.add("recording");
             document.getElementById("recordingTimer").style.display = "block";
             document.getElementById("audioVisualizer").style.display = "block";
+            
             recordingInterval = setInterval(() => {
                 const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
                 const remaining = 60 - elapsed;
                 document.getElementById("recordingTimer").textContent = `${Math.floor(remaining / 60)}:${(remaining % 60).toString().padStart(2, '0')}`;
-                document.getElementById("audioProgress").style.width = `${(elapsed / 60) * 100}%`;
-                if (elapsed >= 60) stopRecording();
+                const progressPercent = (elapsed / 60) * 100;
+                document.getElementById("audioProgress").style.width = `${progressPercent}%`;
+                
+                if (elapsed >= 60) {
+                    stopRecording();
+                }
             }, 100);
         } catch (err) {
             console.error("Microphone error:", err);
@@ -1349,9 +1595,60 @@
 
     // ==================== MULTI-LANGUAGE ====================
     const translations = {
-        en: { loginPrompt: "ENTER YOUR NODE ID", targetLabel: "🎯 TARGET NODE ID", messageLabel: "📝 ENCRYPTED MESSAGE STRING", sendSuccess: "✓ Message transmitted", sendFail: "✗ Transmission failed", authFail: "Unauthorized Node ID", systemReady: "◆ SYSTEM READY ◆", networkError: "Network error. Check connection.", from: "FROM", clickToReveal: "Click to reveal message", expiresIn: "Expires in", messageWiped: "✗ Message wiped (zero footprint)", attachment: "📎 Attachment", download: "Download Secure Attachment", audio: "🎤 Audio Message" },
-        so: { loginPrompt: "GELI AQOONSIGA NODE ID", targetLabel: "🎯 BARTILKA NODE ID", messageLabel: "📝 FARIIMTA SIRTA AH", sendSuccess: "✓ Farriinta la direy", sendFail: "✗ Diritaan ku guuldareystay", authFail: "Node ID aan la oggolayn", systemReady: "◆ NIDAAMKA DIIYAAR ◆", networkError: "Qalad xiriir. Hubi isku xirka.", from: "KAN", clickToReveal: "Guji si aad u aragto farriinta", expiresIn: "Waqti ka hartay", messageWiped: "✗ Farriintii la tirtiray", attachment: "📎 Lifaaqa", download: "Soo deji Lifaaqa", audio: "🎤 Farriinta Codka" },
-        it: { loginPrompt: "INSERISCI IL TUO NODE ID", targetLabel: "🎯 ID NODE DESTINATARIO", messageLabel: "📝 MESSAGGIO CRITTATO", sendSuccess: "✓ Messaggio trasmesso", sendFail: "✗ Trasmissione fallita", authFail: "Node ID non autorizzato", systemReady: "◆ SISTEMA PRONTO ◆", networkError: "Errore di rete. Controlla la connessione.", from: "DA", clickToReveal: "Clicca per vedere il messaggio", expiresIn: "Scade tra", messageWiped: "✗ Messaggio cancellato", attachment: "📎 Allegato", download: "Scarica Allegato", audio: "🎤 Messaggio Audio" }
+        en: {
+            loginPrompt: "ENTER YOUR NODE ID",
+            targetLabel: "🎯 TARGET NODE ID",
+            messageLabel: "📝 ENCRYPTED MESSAGE STRING",
+            sendSuccess: "✓ Message transmitted",
+            sendFail: "✗ Transmission failed",
+            authFail: "Unauthorized Node ID",
+            systemReady: "◆ SYSTEM READY ◆",
+            networkError: "Network error. Check connection.",
+            from: "FROM",
+            clickToReveal: "Click to reveal message",
+            expiresIn: "Expires in",
+            messageWiped: "✗ Message wiped (zero footprint)",
+            attachment: "📎 Attachment",
+            download: "Download",
+            view: "View",
+            audio: "🎤 Audio Message"
+        },
+        so: {
+            loginPrompt: "GELI AQOONSIGA NODE ID",
+            targetLabel: "🎯 BARTILKA NODE ID",
+            messageLabel: "📝 FARIIMTA SIRTA AH",
+            sendSuccess: "✓ Farriinta la direy",
+            sendFail: "✗ Diritaan ku guuldareystay",
+            authFail: "Node ID aan la oggolayn",
+            systemReady: "◆ NIDAAMKA DIIYAAR ◆",
+            networkError: "Qalad xiriir. Hubi isku xirka.",
+            from: "KAN",
+            clickToReveal: "Guji si aad u aragto farriinta",
+            expiresIn: "Waqti ka hartay",
+            messageWiped: "✗ Farriintii la tirtiray",
+            attachment: "📎 Lifaaqa",
+            download: "Soo deji",
+            view: "Daawasho",
+            audio: "🎤 Farriinta Codka"
+        },
+        it: {
+            loginPrompt: "INSERISCI IL TUO NODE ID",
+            targetLabel: "🎯 ID NODE DESTINATARIO",
+            messageLabel: "📝 MESSAGGIO CRITTATO",
+            sendSuccess: "✓ Messaggio trasmesso",
+            sendFail: "✗ Trasmissione fallita",
+            authFail: "Node ID non autorizzato",
+            systemReady: "◆ SISTEMA PRONTO ◆",
+            networkError: "Errore di rete. Controlla la connessione.",
+            from: "DA",
+            clickToReveal: "Clicca per vedere il messaggio",
+            expiresIn: "Scade tra",
+            messageWiped: "✗ Messaggio cancellato",
+            attachment: "📎 Allegato",
+            download: "Scarica",
+            view: "Visualizza",
+            audio: "🎤 Messaggio Audio"
+        }
     };
 
     function updateUITexts() {
@@ -1364,15 +1661,22 @@
     }
 
     async function apiRequest(endpoint, method, body = null) {
-        const headers = { "X-API-Key": API_KEY, "Content-Type": "application/json" };
+        const headers = {
+            "X-API-Key": API_KEY,
+            "Content-Type": "application/json"
+        };
         const options = { method, headers };
         if (body) options.body = JSON.stringify(body);
+        
         const response = await fetch(`${SERVER_URL}${endpoint}`, options);
-        if (!response.ok) { const err = await response.json().catch(() => ({})); throw new Error(err.error || `HTTP ${response.status}`); }
+        if (!response.ok) {
+            const err = await response.json().catch(() => ({}));
+            throw new Error(err.error || `HTTP ${response.status}`);
+        }
         return response.json();
     }
 
-    // ==================== CYBER MAP ====================
+    // ==================== LIVE CYBER ATTACK MAP ====================
     function initCyberMap(canvasId = "cyberCanvas", alertId = "alertStatus") {
         const canvas = document.getElementById(canvasId);
         if (!canvas) return;
@@ -1381,27 +1685,58 @@
         const height = canvas.clientHeight;
         canvas.width = width;
         canvas.height = height;
-        let nodes = [], threats = [];
-        for (let i = 0; i < 25; i++) nodes.push({ x: Math.random() * width, y: Math.random() * height, radius: Math.random() * 4 + 2, color: '#0f0' });
+        
+        let nodes = [];
+        let threats = [];
+        
+        for (let i = 0; i < 25; i++) {
+            nodes.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                radius: Math.random() * 4 + 2,
+                color: '#0f0'
+            });
+        }
+        
         function draw() {
             if (!ctx) return;
             ctx.fillStyle = '#010a12';
             ctx.fillRect(0, 0, width, height);
+            
             ctx.beginPath();
             ctx.strokeStyle = 'rgba(0, 255, 255, 0.2)';
             ctx.lineWidth = 1;
             for (let i = 0; i < nodes.length; i++) {
                 for (let j = i + 1; j < nodes.length; j++) {
-                    const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
-                    if (Math.sqrt(dx * dx + dy * dy) < 60) { ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y); ctx.stroke(); }
+                    const dx = nodes[i].x - nodes[j].x;
+                    const dy = nodes[i].y - nodes[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 60) {
+                        ctx.beginPath();
+                        ctx.moveTo(nodes[i].x, nodes[i].y);
+                        ctx.lineTo(nodes[j].x, nodes[j].y);
+                        ctx.stroke();
+                    }
                 }
             }
-            for (let node of nodes) { ctx.beginPath(); ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2); ctx.fillStyle = node.color; ctx.fill(); ctx.shadowBlur = 8; ctx.shadowColor = '#0ff'; }
+            
+            for (let node of nodes) {
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+                ctx.fillStyle = node.color;
+                ctx.fill();
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = '#0ff';
+            }
+            
             for (let threat of threats) {
-                ctx.beginPath(); ctx.moveTo(threat.fromX, threat.fromY); ctx.lineTo(threat.toX, threat.toY);
+                ctx.beginPath();
+                ctx.moveTo(threat.fromX, threat.fromY);
+                ctx.lineTo(threat.toX, threat.toY);
                 ctx.strokeStyle = threat.type === 'attack' ? '#f00' : '#0f0';
                 ctx.lineWidth = 2;
                 ctx.stroke();
+                
                 threat.progress += 0.02;
                 if (threat.progress >= 1) {
                     threat.progress = 0;
@@ -1410,20 +1745,47 @@
                     threat.toX = nodes[Math.floor(Math.random() * nodes.length)].x;
                     threat.toY = nodes[Math.floor(Math.random() * nodes.length)].y;
                     threat.type = Math.random() > 0.7 ? 'attack' : 'defense';
+                    
                     const alertDiv = document.getElementById(alertId);
                     if (alertDiv) {
-                        alertDiv.innerHTML = threat.type === 'attack' ? '🔴 THREAT DETECTED: ACTIVE INTRUSION' : '🟢 SECURE: THREAT CONTAINED';
-                        alertDiv.style.color = threat.type === 'attack' ? '#f44' : '#4f4';
+                        if (threat.type === 'attack') {
+                            alertDiv.innerHTML = '🔴 THREAT DETECTED: ACTIVE INTRUSION';
+                            alertDiv.style.color = '#f44';
+                        } else {
+                            alertDiv.innerHTML = '🟢 SECURE: THREAT CONTAINED';
+                            alertDiv.style.color = '#4f4';
+                        }
                     }
+                    
                     const targetNode = nodes.find(n => Math.abs(n.x - threat.toX) < 10 && Math.abs(n.y - threat.toY) < 10);
-                    if (targetNode) { targetNode.color = threat.type === 'attack' ? '#f00' : '#0f0'; setTimeout(() => { targetNode.color = '#0ff'; }, 500); }
+                    if (targetNode) {
+                        targetNode.color = threat.type === 'attack' ? '#f00' : '#0f0';
+                        setTimeout(() => { targetNode.color = '#0ff'; }, 500);
+                    }
                 }
             }
+            
             requestAnimationFrame(draw);
         }
-        for (let i = 0; i < 5; i++) threats.push({ fromX: nodes[Math.floor(Math.random() * nodes.length)].x, fromY: nodes[Math.floor(Math.random() * nodes.length)].y, toX: nodes[Math.floor(Math.random() * nodes.length)].x, toY: nodes[Math.floor(Math.random() * nodes.length)].y, progress: Math.random(), type: Math.random() > 0.7 ? 'attack' : 'defense' });
+        
+        for (let i = 0; i < 5; i++) {
+            threats.push({
+                fromX: nodes[Math.floor(Math.random() * nodes.length)].x,
+                fromY: nodes[Math.floor(Math.random() * nodes.length)].y,
+                toX: nodes[Math.floor(Math.random() * nodes.length)].x,
+                toY: nodes[Math.floor(Math.random() * nodes.length)].y,
+                progress: Math.random(),
+                type: Math.random() > 0.7 ? 'attack' : 'defense'
+            });
+        }
+        
         draw();
-        setInterval(() => { const randomNode = nodes[Math.floor(Math.random() * nodes.length)]; randomNode.color = '#fa0'; setTimeout(() => { randomNode.color = '#0ff'; }, 300); }, 800);
+        
+        setInterval(() => {
+            const randomNode = nodes[Math.floor(Math.random() * nodes.length)];
+            randomNode.color = '#fa0';
+            setTimeout(() => { randomNode.color = '#0ff'; }, 300);
+        }, 800);
     }
 
     // ==================== FILE CLOAKER ====================
@@ -1432,108 +1794,250 @@
         const fileInput = document.getElementById(fileInputId);
         const fileInfo = document.getElementById(fileInfoId);
         if (!dropZone) return;
+        
         dropZone.addEventListener('click', () => fileInput.click());
-        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); const cloaker = dropZone.closest('.file-cloaker'); if (cloaker) cloaker.classList.add('drag-over'); });
-        dropZone.addEventListener('dragleave', () => { const cloaker = dropZone.closest('.file-cloaker'); if (cloaker) cloaker.classList.remove('drag-over'); });
-        dropZone.addEventListener('drop', (e) => { e.preventDefault(); const cloaker = dropZone.closest('.file-cloaker'); if (cloaker) cloaker.classList.remove('drag-over'); const file = e.dataTransfer.files[0]; if (file) processFile(file, fileInfo); });
-        fileInput.addEventListener('change', (e) => { if (e.target.files[0]) processFile(e.target.files[0], fileInfo); });
+        
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const cloaker = dropZone.closest('.file-cloaker');
+            if (cloaker) cloaker.classList.add('drag-over');
+        });
+        
+        dropZone.addEventListener('dragleave', () => {
+            const cloaker = dropZone.closest('.file-cloaker');
+            if (cloaker) cloaker.classList.remove('drag-over');
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const cloaker = dropZone.closest('.file-cloaker');
+            if (cloaker) cloaker.classList.remove('drag-over');
+            const file = e.dataTransfer.files[0];
+            if (file) processFile(file, fileInfo);
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files[0]) processFile(e.target.files[0], fileInfo);
+        });
     }
     
     function processFile(file, fileInfoElement) {
         const maxSize = 5 * 1024 * 1024;
-        if (file.size > maxSize) { alert('File too large. Maximum 5MB.'); return; }
+        if (file.size > maxSize) {
+            alert('File too large. Maximum 5MB.');
+            return;
+        }
+        
         currentAttachmentName = file.name;
         currentAttachmentType = file.type;
+        
         const reader = new FileReader();
         reader.onload = function(e) {
             currentAttachmentBase64 = e.target.result;
             fileInfoElement.style.display = 'block';
-            fileInfoElement.innerHTML = `📎 ${currentAttachmentName}<br><span style="font-size: 9px;">${(file.size / 1024).toFixed(1)} KB (Cloaked)</span><button class="clear-attachment" id="clearAttachmentBtn">Clear</button>`;
-            document.getElementById('clearAttachmentBtn')?.addEventListener('click', () => { currentAttachmentBase64 = null; currentAttachmentName = null; currentAttachmentType = null; fileInfoElement.style.display = 'none'; fileInfoElement.innerHTML = ''; });
+            fileInfoElement.innerHTML = `
+                📎 ${currentAttachmentName}<br>
+                <span style="font-size: 9px;">${(file.size / 1024).toFixed(1)} KB (Cloaked)</span>
+                <button class="clear-attachment" id="clearAttachmentBtn">Clear</button>
+            `;
+            document.getElementById('clearAttachmentBtn')?.addEventListener('click', () => {
+                currentAttachmentBase64 = null;
+                currentAttachmentName = null;
+                currentAttachmentType = null;
+                fileInfoElement.style.display = 'none';
+                fileInfoElement.innerHTML = '';
+            });
         };
         reader.readAsDataURL(file);
     }
 
+    // ==================== DATA FRAGMENT ANIMATION ====================
     function createDataFragments() {
         const overlay = document.createElement('div');
         overlay.className = 'fragment-overlay';
         document.body.appendChild(overlay);
+        
         const button = document.getElementById('sendBtn');
         const buttonRect = button.getBoundingClientRect();
         const targetInput = document.getElementById('targetId');
         const targetRect = targetInput.getBoundingClientRect();
+        
         const message = document.getElementById('messageText').value;
         const fragments = message.split('').concat(Math.random().toString(36).substring(2, 10).split(''));
+        
         for (let i = 0; i < 100; i++) {
             const fragment = document.createElement('div');
             fragment.className = 'data-fragment';
             const randomChar = fragments[Math.floor(Math.random() * fragments.length)] || Math.random().toString(36).substring(7);
             fragment.textContent = randomChar;
+            
             const startX = buttonRect.left + (Math.random() * buttonRect.width);
             const startY = buttonRect.top + (Math.random() * buttonRect.height);
             fragment.style.left = startX + 'px';
             fragment.style.top = startY + 'px';
+            
             const deltaX = targetRect.left + (Math.random() * 100) - startX;
             const deltaY = targetRect.top + (Math.random() * 50) - startY;
             fragment.style.setProperty('--tx', deltaX + 'px');
             fragment.style.setProperty('--ty', deltaY + 'px');
+            
             fragment.style.animationDelay = (Math.random() * 0.3) + 's';
             fragment.style.fontSize = (Math.random() * 8 + 6) + 'px';
+            
             overlay.appendChild(fragment);
         }
-        setTimeout(() => overlay.remove(), 1000);
+        
+        setTimeout(() => {
+            overlay.remove();
+        }, 1000);
     }
 
+    // ==================== EPHEMERAL MESSAGE WITH COUNTDOWN ====================
     function addMessageToHub(senderId, content, timestamp, attachmentBase64 = null, attachmentName = null, attachmentType = null, audioBase64 = null, audioDuration = null) {
         const hub = document.getElementById("msgHub");
         const msgId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+        
         const msgDiv = document.createElement("div");
         msgDiv.id = msgId;
         msgDiv.className = "msg-card";
+        
         let attachmentHtml = '';
-        if (attachmentBase64) attachmentHtml = `<div style="margin-top: 8px;"><button class="download-attachment-btn" data-base64="${attachmentBase64}" data-name="${attachmentName || 'file'}" data-type="${attachmentType || 'application/octet-stream'}">📎 ${translations[currentLanguage].download} (${attachmentName || 'file'})</button></div>`;
+        if (attachmentBase64) {
+            const isImage = attachmentType && attachmentType.startsWith("image/");
+            const isPdf = attachmentType === "application/pdf";
+            attachmentHtml = `
+                <div style="margin-top: 8px;">
+                    <button class="download-attachment-btn" data-base64="${attachmentBase64}" data-name="${attachmentName || 'file'}" data-type="${attachmentType || 'application/octet-stream'}">
+                        💾 ${translations[currentLanguage].download}
+                    </button>
+                    ${(isImage || isPdf) ? `<button class="view-file-btn" data-base64="${attachmentBase64}" data-type="${attachmentType}" data-name="${attachmentName || 'file'}">
+                        👁️ ${translations[currentLanguage].view}
+                    </button>` : ''}
+                </div>
+            `;
+        }
+        
         let audioHtml = '';
-        if (audioBase64) audioHtml = `<div style="margin-top: 8px;"><button class="play-audio-btn" data-audio="${audioBase64}">🎤 ${translations[currentLanguage].audio} (${audioDuration || 0}s)</button></div>`;
-        msgDiv.innerHTML = `<div class="sender-only">📨 ${translations[currentLanguage].from}: ${senderId}<span class="countdown-timer">${translations[currentLanguage].expiresIn}: 15:00</span></div><div class="full-message"><strong>📝 ${translations[currentLanguage].clickToReveal}:</strong><br><span class="message-content">${escapeHtml(content)}</span>${attachmentHtml}${audioHtml}<br><small>🕒 ${new Date(timestamp).toLocaleString()}</small></div>`;
+        if (audioBase64) {
+            audioHtml = `
+                <div style="margin-top: 8px;">
+                    <button class="play-audio-btn" data-audio="${audioBase64}">
+                        🎤 ${translations[currentLanguage].audio} (${audioDuration || 0}s)
+                    </button>
+                </div>
+            `;
+        }
+        
+        msgDiv.innerHTML = `
+            <div class="sender-only">
+                📨 ${translations[currentLanguage].from}: ${senderId}
+                <span class="countdown-timer">${translations[currentLanguage].expiresIn}: 15:00</span>
+            </div>
+            <div class="full-message">
+                <strong>📝 ${translations[currentLanguage].clickToReveal}:</strong><br>
+                <span class="message-content">${escapeHtml(content)}</span>
+                ${attachmentHtml}
+                ${audioHtml}
+                <br><small>🕒 ${new Date(timestamp).toLocaleString()}</small>
+            </div>
+        `;
+        
         let revealed = false;
         let timeLeft = 900;
         let timerInterval = null;
+        
         msgDiv.addEventListener('click', (e) => {
-            if (e.target.closest('.full-message') || e.target.classList.contains('download-attachment-btn') || e.target.classList.contains('play-audio-btn')) return;
+            if (e.target.closest('.full-message') || e.target.classList.contains('download-attachment-btn') || e.target.classList.contains('play-audio-btn') || e.target.classList.contains('view-file-btn')) return;
+            
             if (!revealed) {
                 msgDiv.classList.add('expanded');
                 revealed = true;
+                
                 const timerSpan = msgDiv.querySelector('.countdown-timer');
+                
                 timerInterval = setInterval(() => {
                     if (timeLeft <= 0) {
                         clearInterval(timerInterval);
                         if (activeTimers.has(msgId)) activeTimers.delete(msgId);
                         msgDiv.style.opacity = '0';
                         msgDiv.style.transform = 'translateX(-20px)';
-                        setTimeout(() => { if (msgDiv.parentNode) msgDiv.remove(); }, 300);
+                        setTimeout(() => {
+                            if (msgDiv.parentNode) msgDiv.remove();
+                        }, 300);
                     } else {
                         timeLeft--;
                         const minutes = Math.floor(timeLeft / 60);
                         const seconds = timeLeft % 60;
                         timerSpan.textContent = `${translations[currentLanguage].expiresIn}: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                        if (timeLeft <= 60) { timerSpan.style.background = 'rgba(255, 0, 0, 0.6)'; timerSpan.style.animation = 'pulse 1s infinite'; }
+                        if (timeLeft <= 60) {
+                            timerSpan.style.background = 'rgba(255, 0, 0, 0.6)';
+                            timerSpan.style.animation = 'pulse 1s infinite';
+                        }
                     }
                 }, 1000);
                 activeTimers.set(msgId, timerInterval);
             }
         });
-        msgDiv.querySelectorAll('.download-attachment-btn').forEach(btn => { btn.addEventListener('click', (e) => { e.stopPropagation(); const base64Data = btn.getAttribute('data-base64'); const fileName = btn.getAttribute('data-name'); const link = document.createElement('a'); link.href = base64Data; link.download = fileName || 'secure_attachment'; document.body.appendChild(link); link.click(); document.body.removeChild(link); }); });
-        msgDiv.querySelectorAll('.play-audio-btn').forEach(btn => { btn.addEventListener('click', (e) => { e.stopPropagation(); const audioData = btn.getAttribute('data-audio'); const audio = new Audio(audioData); audio.play().catch(err => console.warn("Audio play failed:", err)); }); });
-        if (hub.children.length === 1 && hub.children[0].innerText.includes("SYSTEM READY")) hub.innerHTML = '';
+        
+        msgDiv.querySelectorAll('.download-attachment-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const base64Data = btn.getAttribute('data-base64');
+                const fileName = btn.getAttribute('data-name');
+                const link = document.createElement('a');
+                link.href = base64Data;
+                link.download = fileName || 'secure_attachment';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        });
+        
+        msgDiv.querySelectorAll('.view-file-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const base64Data = btn.getAttribute('data-base64');
+                const fileType = btn.getAttribute('data-type');
+                const fileName = btn.getAttribute('data-name');
+                openViewer(base64Data, fileType, fileName);
+            });
+        });
+        
+        msgDiv.querySelectorAll('.play-audio-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const audioData = btn.getAttribute('data-audio');
+                const audio = new Audio(audioData);
+                audio.play().catch(err => console.warn("Audio play failed:", err));
+            });
+        });
+        
+        if (hub.children.length === 1 && hub.children[0].innerText.includes("SYSTEM READY")) {
+            hub.innerHTML = '';
+        }
+        
         hub.prepend(msgDiv);
-        while (hub.children.length > 50) { const oldest = hub.lastChild; if (oldest && activeTimers.has(oldest.id)) { clearInterval(activeTimers.get(oldest.id)); activeTimers.delete(oldest.id); } hub.removeChild(oldest); }
+        
+        while (hub.children.length > 50) {
+            const oldest = hub.lastChild;
+            if (oldest && activeTimers.has(oldest.id)) {
+                clearInterval(activeTimers.get(oldest.id));
+                activeTimers.delete(oldest.id);
+            }
+            hub.removeChild(oldest);
+        }
     }
     
-    function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
 
     async function authenticateNode(nodeId) {
         const errorDiv = document.getElementById("loginError");
         errorDiv.innerText = "";
+        
         try {
             const result = await apiRequest("/api/authorize", "POST", { node_id: nodeId });
             if (result.authorized) {
@@ -1549,7 +2053,7 @@
                 initCyberMap("mobileCyberCanvas", "mobileAlertStatus");
                 setupFileCloaker("dropZone", "fileInfo", "fileInput");
                 setupFileCloaker("mobileDropZone", "mobileFileInfo", "fileInput");
-                await renderVault();
+                await renderVault(); // Load cloud vault
                 return true;
             } else {
                 errorDiv.innerText = translations[currentLanguage].authFail;
@@ -1562,29 +2066,79 @@
     }
 
     async function sendMessage() {
-        if (!currentNodeId) { alert("Session expired. Relogin required."); return; }
+        if (!currentNodeId) {
+            alert("Session expired. Relogin required.");
+            return;
+        }
+        
         const targetId = document.getElementById("targetId").value.trim();
         const messageText = document.getElementById("messageText").value.trim();
-        if (!targetId || !messageText) { alert("Target Node ID and Message cannot be empty."); return; }
+        
+        if (!targetId || !messageText) {
+            alert("Target Node ID and Message cannot be empty.");
+            return;
+        }
+        
         try {
-            const payload = { sender_id: currentNodeId, target_id: targetId, message: messageText };
-            if (currentAttachmentBase64) { payload.attachment = currentAttachmentBase64; payload.attachment_name = currentAttachmentName; payload.attachment_type = currentAttachmentType; }
-            if (currentAudioBase64) { payload.audio_attachment = currentAudioBase64; payload.audio_duration = currentAudioDuration; }
+            const payload = {
+                sender_id: currentNodeId,
+                target_id: targetId,
+                message: messageText
+            };
+            
+            if (currentAttachmentBase64) {
+                payload.attachment = currentAttachmentBase64;
+                payload.attachment_name = currentAttachmentName;
+                payload.attachment_type = currentAttachmentType;
+            }
+            
+            if (currentAudioBase64) {
+                payload.audio_attachment = currentAudioBase64;
+                payload.audio_duration = currentAudioDuration;
+            }
+            
             await apiRequest("/api/send", "POST", payload);
+            
             createDataFragments();
+            
             const hub = document.getElementById("msgHub");
             const successMsg = document.createElement("div");
             successMsg.className = "msg-card";
             successMsg.style.borderLeftColor = "#0f0";
             successMsg.innerHTML = `✅ ${translations[currentLanguage].sendSuccess} → ${targetId}`;
             hub.prepend(successMsg);
-            setTimeout(() => { successMsg.style.opacity = '0'; setTimeout(() => successMsg.remove(), 300); }, 3000);
+            
+            setTimeout(() => {
+                successMsg.style.opacity = '0';
+                setTimeout(() => successMsg.remove(), 300);
+            }, 3000);
+            
             document.getElementById("messageText").value = "";
-            currentAttachmentBase64 = null; currentAttachmentName = null; currentAttachmentType = null; currentAudioBase64 = null; currentAudioDuration = 0;
-            const fileInfo = document.getElementById('fileInfo'); if (fileInfo) { fileInfo.style.display = 'none'; fileInfo.innerHTML = ''; }
-            const mobileFileInfo = document.getElementById('mobileFileInfo'); if (mobileFileInfo) { mobileFileInfo.style.display = 'none'; mobileFileInfo.innerHTML = ''; }
-            const audioPreview = document.getElementById('audioPreview'); if (audioPreview) { audioPreview.style.display = 'none'; audioPreview.innerHTML = ''; }
-        } catch (err) { alert(`${translations[currentLanguage].sendFail}: ${err.message}`); }
+            currentAttachmentBase64 = null;
+            currentAttachmentName = null;
+            currentAttachmentType = null;
+            currentAudioBase64 = null;
+            currentAudioDuration = 0;
+            
+            const fileInfo = document.getElementById('fileInfo');
+            if (fileInfo) {
+                fileInfo.style.display = 'none';
+                fileInfo.innerHTML = '';
+            }
+            const mobileFileInfo = document.getElementById('mobileFileInfo');
+            if (mobileFileInfo) {
+                mobileFileInfo.style.display = 'none';
+                mobileFileInfo.innerHTML = '';
+            }
+            const audioPreview = document.getElementById('audioPreview');
+            if (audioPreview) {
+                audioPreview.style.display = 'none';
+                audioPreview.innerHTML = '';
+            }
+            
+        } catch (err) {
+            alert(`${translations[currentLanguage].sendFail}: ${err.message}`);
+        }
     }
 
     async function fetchMessages() {
@@ -1592,13 +2146,30 @@
         try {
             const data = await apiRequest(`/api/receive/${currentNodeId}`, "GET");
             const messages = data.messages || [];
-            for (let msg of messages) addMessageToHub(msg.from, msg.content, msg.timestamp, msg.attachment || null, msg.attachment_name || null, msg.attachment_type || null, msg.audio_attachment || null, msg.audio_duration || null);
-        } catch (err) { console.warn("Polling error:", err); }
+            
+            for (let msg of messages) {
+                addMessageToHub(
+                    msg.from, 
+                    msg.content, 
+                    msg.timestamp,
+                    msg.attachment || null,
+                    msg.attachment_name || null,
+                    msg.attachment_type || null,
+                    msg.audio_attachment || null,
+                    msg.audio_duration || null
+                );
+            }
+        } catch (err) {
+            console.warn("Polling error:", err);
+        }
     }
 
     function startPolling() {
         if (pollingInterval) clearInterval(pollingInterval);
-        pollingInterval = setInterval(() => { fetchMessages(); updateMetrics(); }, 2000);
+        pollingInterval = setInterval(() => {
+            fetchMessages();
+            updateMetrics();
+        }, 2000);
     }
 
     function updateMetrics() {
@@ -1608,6 +2179,7 @@
         document.getElementById("cpuMetric").innerText = `${cpu}%`;
         document.getElementById("latencyMetric").innerText = `${latency}ms`;
         document.getElementById("speedMetric").innerText = `${speed} Mbps`;
+        
         const threats = ["🔍 SCANNING", "⚠️ LOW THREAT", "🛡️ ACTIVE DEFENSE", "📡 SIGNAL MASKED", "✅ SECURE CHANNEL", "🦅 EAGLE EYE ACTIVE"];
         document.getElementById("threatMsg").innerHTML = `🛰️ ${threats[Math.floor(Math.random()*threats.length)]}`;
     }
@@ -1622,56 +2194,157 @@
         alert(`Language changed to ${langOptions[currentLanguage]}`);
     }
 
+    // ==================== MOBILE DRAWER ====================
     function initMobileDrawer() {
         const toggle = document.getElementById('mobileDrawerToggle');
         const drawer = document.getElementById('mobileDrawer');
         const overlay = document.getElementById('mobileDrawerOverlay');
         const closeBtn = document.getElementById('mobileClose');
-        if (toggle) toggle.addEventListener('click', () => { drawer.classList.add('open'); overlay.classList.add('open'); });
-        const closeDrawer = () => { drawer.classList.remove('open'); overlay.classList.remove('open'); };
+        
+        if (toggle) {
+            toggle.addEventListener('click', () => {
+                drawer.classList.add('open');
+                overlay.classList.add('open');
+            });
+        }
+        
+        const closeDrawer = () => {
+            drawer.classList.remove('open');
+            overlay.classList.remove('open');
+        };
+        
         if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
         if (overlay) overlay.addEventListener('click', closeDrawer);
     }
 
+    // ==================== VAULT FILE UPLOAD HANDLERS ====================
     function setupVaultFileUpload(vaultFileInputId, fileInfoDivId, isMobile = false) {
         const fileInput = document.getElementById(vaultFileInputId);
         const fileInfoDiv = document.getElementById(fileInfoDivId);
+        
         if (!fileInput) return;
+        
         fileInput.addEventListener("change", async (e) => {
             const file = e.target.files[0];
             if (!file) return;
+            
             const maxSize = 10 * 1024 * 1024;
-            if (file.size > maxSize) { alert("File too large. Maximum 10MB for vault storage."); return; }
+            if (file.size > maxSize) {
+                alert("File too large. Maximum 10MB for vault storage.");
+                return;
+            }
+            
             const reader = new FileReader();
             reader.onload = async function(evt) {
                 const base64Data = evt.target.result;
                 const label = isMobile ? document.getElementById("mobileVaultLabel").value.trim() : document.getElementById("vaultLabel").value.trim();
-                if (!label) { alert("Please enter a label for this file first"); return; }
+                
+                if (!label) {
+                    alert("Please enter a label for this file first");
+                    return;
+                }
+                
                 await saveToVault(label, null, true, file.name, file.type, base64Data);
-                if (isMobile) { document.getElementById("mobileVaultLabel").value = ""; document.getElementById("mobileVaultFileInfo").innerHTML = ""; }
-                else { document.getElementById("vaultLabel").value = ""; document.getElementById("vaultFileInfo").innerHTML = ""; }
+                
+                if (isMobile) {
+                    document.getElementById("mobileVaultLabel").value = "";
+                    document.getElementById("mobileVaultFileInfo").innerHTML = "";
+                } else {
+                    document.getElementById("vaultLabel").value = "";
+                    document.getElementById("vaultFileInfo").innerHTML = "";
+                }
                 fileInput.value = "";
             };
             reader.readAsDataURL(file);
-            if (fileInfoDiv) { fileInfoDiv.innerHTML = `📎 Selected: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`; setTimeout(() => { if (fileInfoDiv) fileInfoDiv.innerHTML = ""; }, 3000); }
+            
+            if (fileInfoDiv) {
+                fileInfoDiv.innerHTML = `📎 Selected: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+                setTimeout(() => {
+                    if (fileInfoDiv) fileInfoDiv.innerHTML = "";
+                }, 3000);
+            }
         });
     }
 
-    document.getElementById("loginBtn").addEventListener("click", () => { const nodeInput = document.getElementById("nodeIdInput").value.trim(); if (!nodeInput) { document.getElementById("loginError").innerText = "Please enter a Node ID"; return; } authenticateNode(nodeInput); });
+    // ==================== EVENT LISTENERS ====================
+    document.getElementById("loginBtn").addEventListener("click", () => {
+        const nodeInput = document.getElementById("nodeIdInput").value.trim();
+        if (!nodeInput) {
+            document.getElementById("loginError").innerText = "Please enter a Node ID";
+            return;
+        }
+        authenticateNode(nodeInput);
+    });
+
     document.getElementById("sendBtn").addEventListener("click", sendMessage);
     document.getElementById("toolsSettingsBtn").addEventListener("click", showLanguageSwitcher);
     document.getElementById("mobileToolsBtn")?.addEventListener("click", showLanguageSwitcher);
-    document.getElementById("micBtn").addEventListener("click", () => { if (isRecording) stopRecording(); else startRecording(); });
-    document.getElementById("vaultSaveTextBtn").addEventListener("click", async () => { const label = document.getElementById("vaultLabel").value.trim(); const content = document.getElementById("vaultContent").value.trim(); if (label && content) { await saveToVault(label, content, false); document.getElementById("vaultLabel").value = ""; document.getElementById("vaultContent").value = ""; } else { alert("Please enter both a label and content"); } });
-    document.getElementById("vaultUploadBtn").addEventListener("click", () => { document.getElementById("vaultFileInput").click(); });
-    document.getElementById("mobileVaultSaveTextBtn")?.addEventListener("click", async () => { const label = document.getElementById("mobileVaultLabel").value.trim(); const content = document.getElementById("mobileVaultContent").value.trim(); if (label && content) { await saveToVault(label, content, false); document.getElementById("mobileVaultLabel").value = ""; document.getElementById("mobileVaultContent").value = ""; } else { alert("Please enter both a label and content"); } });
-    document.getElementById("mobileVaultUploadBtn")?.addEventListener("click", () => { document.getElementById("mobileVaultFileInput").click(); });
-    document.querySelectorAll(".lang-btn").forEach(btn => { btn.addEventListener("click", (e) => { currentLanguage = e.target.getAttribute("data-lang"); updateUITexts(); }); });
+    
+    document.getElementById("micBtn").addEventListener("click", () => {
+        if (isRecording) {
+            stopRecording();
+        } else {
+            startRecording();
+        }
+    });
+    
+    // Viewer close
+    document.getElementById("viewerClose").addEventListener("click", closeViewer);
+    document.getElementById("viewerModal").addEventListener("click", (e) => {
+        if (e.target === document.getElementById("viewerModal")) closeViewer();
+    });
+    
+    // Vault Text Save
+    document.getElementById("vaultSaveTextBtn").addEventListener("click", async () => {
+        const label = document.getElementById("vaultLabel").value.trim();
+        const content = document.getElementById("vaultContent").value.trim();
+        if (label && content) {
+            await saveToVault(label, content, false);
+            document.getElementById("vaultLabel").value = "";
+            document.getElementById("vaultContent").value = "";
+        } else {
+            alert("Please enter both a label and content");
+        }
+    });
+    
+    // Vault File Upload
+    document.getElementById("vaultUploadBtn").addEventListener("click", () => {
+        document.getElementById("vaultFileInput").click();
+    });
+    
+    // Mobile Vault Text Save
+    document.getElementById("mobileVaultSaveTextBtn")?.addEventListener("click", async () => {
+        const label = document.getElementById("mobileVaultLabel").value.trim();
+        const content = document.getElementById("mobileVaultContent").value.trim();
+        if (label && content) {
+            await saveToVault(label, content, false);
+            document.getElementById("mobileVaultLabel").value = "";
+            document.getElementById("mobileVaultContent").value = "";
+        } else {
+            alert("Please enter both a label and content");
+        }
+    });
+    
+    // Mobile Vault File Upload
+    document.getElementById("mobileVaultUploadBtn")?.addEventListener("click", () => {
+        document.getElementById("mobileVaultFileInput").click();
+    });
+
+    document.querySelectorAll(".lang-btn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            currentLanguage = e.target.getAttribute("data-lang");
+            updateUITexts();
+        });
+    });
+
     updateUITexts();
     initMobileDrawer();
     setupVaultFileUpload("vaultFileInput", "vaultFileInfo", false);
     setupVaultFileUpload("mobileVaultFileInput", "mobileVaultFileInfo", true);
-    document.getElementById("nodeIdInput").addEventListener("keypress", (e) => { if (e.key === "Enter") document.getElementById("loginBtn").click(); });
+    
+    document.getElementById("nodeIdInput").addEventListener("keypress", (e) => {
+        if (e.key === "Enter") document.getElementById("loginBtn").click();
+    });
 </script>
 </body>
 </html>
