@@ -420,7 +420,7 @@
             letter-spacing: 2px;
         }
 
-        /* Secure Local Vault */
+        /* Secure Local Vault - UPGRADED */
         .secure-vault {
             background: rgba(0, 0, 0, 0.4);
             border-radius: 20px;
@@ -436,34 +436,68 @@
             letter-spacing: 1px;
         }
 
-        .vault-add {
+        .vault-input-group {
             display: flex;
+            flex-direction: column;
             gap: 8px;
             margin-bottom: 12px;
         }
 
-        .vault-add input {
-            flex: 1;
+        .vault-label-input {
             background: rgba(0,0,0,0.6);
             border: 1px solid rgba(0,255,255,0.3);
             border-radius: 12px;
             padding: 8px;
             color: #0ff;
             font-size: 11px;
+            width: 100%;
         }
 
-        .vault-add button {
+        .vault-textarea {
+            background: rgba(0,0,0,0.6);
+            border: 1px solid rgba(0,255,255,0.3);
+            border-radius: 12px;
+            padding: 8px;
+            color: #0ff;
+            font-size: 11px;
+            width: 100%;
+            resize: vertical;
+        }
+
+        .vault-button-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .vault-btn {
             background: rgba(0,255,255,0.2);
             border: 1px solid #0ff;
             border-radius: 12px;
             padding: 8px 12px;
             cursor: pointer;
             color: #0ff;
+            font-size: 11px;
+            flex: 1;
+            text-align: center;
+        }
+
+        .vault-btn:hover {
+            background: #0ff;
+            color: #000;
+        }
+
+        .vault-file-info {
+            font-size: 9px;
+            color: #0fa;
+            margin-top: 6px;
+            text-align: center;
         }
 
         .vault-items {
-            max-height: 150px;
+            max-height: 200px;
             overflow-y: auto;
+            margin-top: 12px;
         }
 
         .vault-item {
@@ -474,10 +508,24 @@
             font-size: 10px;
         }
 
+        .vault-item-type {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 8px;
+            margin-left: 6px;
+        }
+
+        .type-text { background: rgba(0,255,255,0.3); color: #0ff; }
+        .type-image { background: rgba(0,255,0,0.3); color: #0f0; }
+        .type-pdf { background: rgba(255,0,0,0.3); color: #f66; }
+        .type-file { background: rgba(255,255,0,0.3); color: #ff0; }
+
         .vault-item-buttons {
             margin-top: 6px;
             display: flex;
             gap: 6px;
+            flex-wrap: wrap;
         }
 
         .vault-item-buttons button {
@@ -488,6 +536,26 @@
             cursor: pointer;
             font-size: 9px;
             color: #0ff;
+        }
+
+        .vault-preview {
+            margin-top: 8px;
+            padding: 8px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 8px;
+            word-break: break-all;
+        }
+
+        .vault-preview img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+
+        .vault-preview iframe {
+            width: 100%;
+            height: 200px;
+            border: none;
+            border-radius: 8px;
         }
 
         /* File Cloaker */
@@ -677,7 +745,7 @@
             }
         }
 
-        /* ==================== MOBILE RESPONSIVE (COLLAPSIBLE DRAWER) ==================== */
+        /* ==================== MOBILE RESPONSIVE ==================== */
         @media (max-width: 968px) {
             body {
                 padding: 10px;
@@ -692,7 +760,6 @@
                 min-height: auto;
             }
             
-            /* Mobile Drawer Toggle */
             .mobile-drawer-toggle {
                 position: fixed;
                 bottom: 20px;
@@ -755,7 +822,6 @@
                 cursor: pointer;
             }
             
-            /* Hide original sidebars on mobile */
             .sidebar {
                 display: none;
             }
@@ -764,7 +830,6 @@
                 display: none;
             }
             
-            /* Make console full width */
             .console {
                 width: 100%;
             }
@@ -834,12 +899,17 @@
     </div>
     <div class="secure-vault">
         <div class="vault-title">🔐 SECURE LOCAL VAULT (AES Encrypted)</div>
-        <div class="vault-add">
-            <input type="text" id="mobileVaultLabel" placeholder="Label/title">
-            <textarea id="mobileVaultContent" rows="2" placeholder="Secret data..." style="width:100%; background:rgba(0,0,0,0.6); color:#0ff; border:1px solid #0ff; border-radius:8px; padding:6px;"></textarea>
-            <button id="mobileVaultSaveBtn">Save</button>
+        <div class="vault-input-group">
+            <input type="text" id="mobileVaultLabel" class="vault-label-input" placeholder="Label/title">
+            <textarea id="mobileVaultContent" class="vault-textarea" rows="2" placeholder="Secret text or paste data..."></textarea>
+            <div class="vault-button-row">
+                <button id="mobileVaultSaveTextBtn" class="vault-btn">💾 Save Text</button>
+                <button id="mobileVaultUploadBtn" class="vault-btn">📁 Upload File</button>
+            </div>
+            <div id="mobileVaultFileInfo" class="vault-file-info"></div>
         </div>
         <div id="mobileVaultItems" class="vault-items"></div>
+        <input type="file" id="mobileVaultFileInput" style="display: none;" accept="image/*,application/pdf,.txt,.doc,.docx,.png,.jpg,.jpeg">
     </div>
     <div class="file-cloaker" style="margin-top: 20px;">
         <div class="cloaker-title">🔒 SECURE FILE / IMAGE CLOAKER</div>
@@ -916,15 +986,20 @@
         </div>
         <div class="threat-text" id="threatMsg">🔴 4 active signals | ECCM active</div>
         
-        <!-- Secure Local Storage Vault -->
+        <!-- Secure Local Storage Vault - UPGRADED with File Upload -->
         <div class="secure-vault">
             <div class="vault-title">🔐 SECURE LOCAL VAULT (AES Encrypted)</div>
-            <div class="vault-add">
-                <input type="text" id="vaultLabel" placeholder="Label/title" style="flex:1;">
-                <button id="vaultSaveBtn">Save</button>
+            <div class="vault-input-group">
+                <input type="text" id="vaultLabel" class="vault-label-input" placeholder="Label/title">
+                <textarea id="vaultContent" class="vault-textarea" rows="2" placeholder="Secret text or paste data..."></textarea>
+                <div class="vault-button-row">
+                    <button id="vaultSaveTextBtn" class="vault-btn">💾 Save Text</button>
+                    <button id="vaultUploadBtn" class="vault-btn">📁 Upload File</button>
+                </div>
+                <div id="vaultFileInfo" class="vault-file-info"></div>
             </div>
-            <textarea id="vaultContent" rows="2" placeholder="Secret text or paste Base64 image/data..." style="width:100%; background:rgba(0,0,0,0.6); color:#0ff; border:1px solid #0ff; border-radius:8px; padding:6px; margin-bottom:8px;"></textarea>
             <div id="vaultItems" class="vault-items"></div>
+            <input type="file" id="vaultFileInput" style="display: none;" accept="image/*,application/pdf,.txt,.doc,.docx,.png,.jpg,.jpeg">
         </div>
         
         <!-- Secure File Cloaker -->
@@ -962,6 +1037,7 @@
     let currentAttachmentType = null;
     let currentAudioBase64 = null;
     let currentAudioDuration = 0;
+    let pendingVaultFile = null; // For vault file upload
     
     // Audio recording variables
     let mediaRecorder = null;
@@ -971,7 +1047,6 @@
     let recordingInterval = null;
 
     // ==================== AES ENCRYPTION FOR VAULT ====================
-    // Simple but secure AES-like encryption using Web Crypto API
     async function encryptData(text, password = "eagle-secure-key-2024") {
         const encoder = new TextEncoder();
         const data = encoder.encode(text);
@@ -1041,14 +1116,63 @@
         return new TextDecoder().decode(decrypted);
     }
 
-    // ==================== VAULT FUNCTIONS ====================
-    async function saveToVault(label, content) {
-        if (!label || !content) return;
-        const encrypted = await encryptData(content);
+    // ==================== VAULT FUNCTIONS (Text + Files) ====================
+    async function saveToVault(label, content, isFile = false, fileName = null, fileType = null, fileBase64 = null) {
+        if (!label) {
+            alert("Please enter a label/title");
+            return;
+        }
+        
+        let dataToEncrypt;
+        let itemType = "text";
+        let originalName = null;
+        let mimeType = null;
+        
+        if (isFile && fileBase64) {
+            dataToEncrypt = JSON.stringify({
+                type: "file",
+                fileName: fileName,
+                mimeType: fileType,
+                base64: fileBase64
+            });
+            itemType = fileType ? (fileType.startsWith("image/") ? "image" : (fileType === "application/pdf" ? "pdf" : "file")) : "file";
+            originalName = fileName;
+            mimeType = fileType;
+        } else {
+            dataToEncrypt = JSON.stringify({
+                type: "text",
+                content: content
+            });
+            itemType = "text";
+        }
+        
+        const encrypted = await encryptData(dataToEncrypt);
         const vault = JSON.parse(localStorage.getItem("eagle_secure_vault") || "[]");
-        vault.push({ id: Date.now(), label, encrypted, timestamp: new Date().toISOString() });
+        vault.push({ 
+            id: Date.now(), 
+            label, 
+            encrypted, 
+            itemType,
+            originalName,
+            mimeType,
+            timestamp: new Date().toISOString() 
+        });
         localStorage.setItem("eagle_secure_vault", JSON.stringify(vault));
         renderVault();
+    }
+    
+    function getFileTypeIcon(type) {
+        if (type === "text") return "📝";
+        if (type === "image") return "🖼️";
+        if (type === "pdf") return "📑";
+        return "📎";
+    }
+    
+    function getFileTypeClass(type) {
+        if (type === "text") return "type-text";
+        if (type === "image") return "type-image";
+        if (type === "pdf") return "type-pdf";
+        return "type-file";
     }
     
     async function renderVault() {
@@ -1059,17 +1183,21 @@
         const renderItems = (container) => {
             if (!container) return;
             container.innerHTML = "";
-            for (let item of vault.reverse().slice(0, 10)) {
+            const sortedVault = [...vault].reverse().slice(0, 15);
+            for (let item of sortedVault) {
                 const div = document.createElement("div");
                 div.className = "vault-item";
+                const typeIcon = getFileTypeIcon(item.itemType);
+                const typeClass = getFileTypeClass(item.itemType);
                 div.innerHTML = `
-                    <strong>📌 ${escapeHtml(item.label)}</strong><br>
+                    <strong>${typeIcon} ${escapeHtml(item.label)}</strong>
+                    <span class="vault-item-type ${typeClass}">${item.itemType}</span><br>
                     <small>${new Date(item.timestamp).toLocaleString()}</small>
                     <div class="vault-item-buttons">
                         <button class="vault-decrypt" data-id="${item.id}">🔓 Decrypt & View</button>
                         <button class="vault-wipe" data-id="${item.id}">🗑️ Wipe</button>
                     </div>
-                    <div class="vault-decrypted-content" style="display:none; margin-top:6px; word-break:break-all;"></div>
+                    <div class="vault-preview" style="display:none;"></div>
                 `;
                 container.appendChild(div);
             }
@@ -1079,10 +1207,34 @@
                     const id = parseInt(btn.getAttribute("data-id"));
                     const item = vault.find(i => i.id === id);
                     if (item) {
-                        const decrypted = await decryptData(item.encrypted);
-                        const contentDiv = btn.closest(".vault-item").querySelector(".vault-decrypted-content");
-                        contentDiv.style.display = "block";
-                        contentDiv.innerHTML = `<span style="color:#0fa;">📄 ${escapeHtml(decrypted)}</span>`;
+                        const decryptedJson = await decryptData(item.encrypted);
+                        const data = JSON.parse(decryptedJson);
+                        const previewDiv = btn.closest(".vault-item").querySelector(".vault-preview");
+                        previewDiv.style.display = "block";
+                        
+                        if (data.type === "text") {
+                            previewDiv.innerHTML = `<span style="color:#0fa;">📄 ${escapeHtml(data.content)}</span>`;
+                        } else if (data.type === "file") {
+                            if (data.mimeType && data.mimeType.startsWith("image/")) {
+                                previewDiv.innerHTML = `<img src="${data.base64}" alt="Preview"><br><button class="vault-download-btn" style="margin-top:8px;">💾 Download File</button>`;
+                            } else {
+                                previewDiv.innerHTML = `<div style="background:rgba(0,255,255,0.1); padding:10px; border-radius:8px;">
+                                    📁 ${escapeHtml(data.fileName)} (${data.mimeType})<br>
+                                    <button class="vault-download-btn" style="margin-top:8px;">💾 Download File</button>
+                                </div>`;
+                            }
+                            
+                            previewDiv.querySelectorAll(".vault-download-btn").forEach(dlBtn => {
+                                dlBtn.addEventListener("click", () => {
+                                    const link = document.createElement("a");
+                                    link.href = data.base64;
+                                    link.download = data.fileName || "vault_file";
+                                    document.body.appendChild(link);
+                                    link.click();
+                                    document.body.removeChild(link);
+                                });
+                            });
+                        }
                     }
                 });
             });
@@ -1102,6 +1254,55 @@
         renderItems(mobileVaultContainer);
     }
     
+    // Vault file upload handler
+    function setupVaultFileUpload(vaultFileInputId, fileInfoDivId, isMobile = false) {
+        const fileInput = document.getElementById(vaultFileInputId);
+        const fileInfoDiv = document.getElementById(fileInfoDivId);
+        
+        if (!fileInput) return;
+        
+        fileInput.addEventListener("change", async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const maxSize = 10 * 1024 * 1024;
+            if (file.size > maxSize) {
+                alert("File too large. Maximum 10MB for vault storage.");
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = async function(evt) {
+                const base64Data = evt.target.result;
+                const label = isMobile ? document.getElementById("mobileVaultLabel").value.trim() : document.getElementById("vaultLabel").value.trim();
+                
+                if (!label) {
+                    alert("Please enter a label for this file first");
+                    return;
+                }
+                
+                await saveToVault(label, null, true, file.name, file.type, base64Data);
+                
+                if (isMobile) {
+                    document.getElementById("mobileVaultLabel").value = "";
+                    document.getElementById("mobileVaultFileInfo").innerHTML = "";
+                } else {
+                    document.getElementById("vaultLabel").value = "";
+                    document.getElementById("vaultFileInfo").innerHTML = "";
+                }
+                fileInput.value = "";
+            };
+            reader.readAsDataURL(file);
+            
+            if (fileInfoDiv) {
+                fileInfoDiv.innerHTML = `📎 Selected: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+                setTimeout(() => {
+                    if (fileInfoDiv) fileInfoDiv.innerHTML = "";
+                }, 3000);
+            }
+        });
+    }
+
     // ==================== AUDIO RECORDING ====================
     async function startRecording() {
         if (isRecording) return;
@@ -1792,24 +1993,40 @@
         }
     });
     
-    document.getElementById("vaultSaveBtn").addEventListener("click", async () => {
+    // Vault Text Save
+    document.getElementById("vaultSaveTextBtn").addEventListener("click", async () => {
         const label = document.getElementById("vaultLabel").value.trim();
         const content = document.getElementById("vaultContent").value.trim();
         if (label && content) {
-            await saveToVault(label, content);
+            await saveToVault(label, content, false);
             document.getElementById("vaultLabel").value = "";
             document.getElementById("vaultContent").value = "";
+        } else {
+            alert("Please enter both a label and content");
         }
     });
     
-    document.getElementById("mobileVaultSaveBtn")?.addEventListener("click", async () => {
+    // Vault File Upload
+    document.getElementById("vaultUploadBtn").addEventListener("click", () => {
+        document.getElementById("vaultFileInput").click();
+    });
+    
+    // Mobile Vault Text Save
+    document.getElementById("mobileVaultSaveTextBtn")?.addEventListener("click", async () => {
         const label = document.getElementById("mobileVaultLabel").value.trim();
         const content = document.getElementById("mobileVaultContent").value.trim();
         if (label && content) {
-            await saveToVault(label, content);
+            await saveToVault(label, content, false);
             document.getElementById("mobileVaultLabel").value = "";
             document.getElementById("mobileVaultContent").value = "";
+        } else {
+            alert("Please enter both a label and content");
         }
+    });
+    
+    // Mobile Vault File Upload
+    document.getElementById("mobileVaultUploadBtn")?.addEventListener("click", () => {
+        document.getElementById("mobileVaultFileInput").click();
     });
 
     document.querySelectorAll(".lang-btn").forEach(btn => {
@@ -1821,6 +2038,8 @@
 
     updateUITexts();
     initMobileDrawer();
+    setupVaultFileUpload("vaultFileInput", "vaultFileInfo", false);
+    setupVaultFileUpload("mobileVaultFileInput", "mobileVaultFileInfo", true);
     
     document.getElementById("nodeIdInput").addEventListener("keypress", (e) => {
         if (e.key === "Enter") document.getElementById("loginBtn").click();
